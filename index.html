@@ -1,0 +1,1535 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Домашній Інвентар</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1a1a2e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f4f1eb;
+  --bg2: #ffffff;
+  --bg3: #e8e4dc;
+  --text: #2c2c2c;
+  --text2: #6b6b6b;
+  --accent: #d4622b;
+  --accent2: #b8511e;
+  --accent-light: rgba(212,98,43,0.1);
+  --border: #d9d5cd;
+  --shadow: rgba(0,0,0,0.06);
+  --card: #ffffff;
+  --nav-bg: rgba(255,255,255,0.92);
+  --success: #3a8a5c;
+  --danger: #c0392b;
+  --radius: 14px;
+  --radius-sm: 8px;
+  --nav-height: 72px;
+  --top-height: 56px;
+}
+[data-theme="dark"] {
+  --bg: #121218;
+  --bg2: #1c1c26;
+  --bg3: #252532;
+  --text: #e8e6e1;
+  --text2: #8a8a9a;
+  --accent: #e87a3f;
+  --accent2: #f09060;
+  --accent-light: rgba(232,122,63,0.12);
+  --border: #2e2e3e;
+  --shadow: rgba(0,0,0,0.2);
+  --card: #1e1e2a;
+  --nav-bg: rgba(28,28,38,0.94);
+  --success: #4caf6a;
+  --danger: #e74c3c;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: 'Nunito', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-tap-highlight-color: transparent;
+}
+/* Scrollbar */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+/* ============ TOP BAR ============ */
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  height: var(--top-height);
+  background: var(--nav-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 16px;
+  border-bottom: 1px solid var(--border);
+}
+.topbar-title {
+  font-weight: 800; font-size: 18px;
+  display: flex; align-items: center; gap: 8px;
+}
+.topbar-title svg { width: 22px; height: 22px; color: var(--accent); }
+.topbar-actions { display: flex; gap: 8px; align-items: center; }
+.topbar-btn {
+  background: none; border: none; color: var(--text2); cursor: pointer;
+  width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;
+  border-radius: 50%; transition: all 0.2s;
+}
+.topbar-btn:hover { background: var(--bg3); color: var(--text); }
+.topbar-btn svg { width: 20px; height: 20px; }
+
+/* ============ BOTTOM NAV ============ */
+.bottom-nav {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;
+  height: var(--nav-height);
+  background: var(--nav-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid var(--border);
+  display: flex; align-items: stretch; justify-content: space-around;
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+.nav-item {
+  flex: 1; display: flex; flex-direction: column; align-items: center;
+  justify-content: center; gap: 3px; cursor: pointer;
+  color: var(--text2); transition: all 0.2s; border: none; background: none;
+  font-family: inherit; font-size: 10px; font-weight: 600;
+  position: relative;
+}
+.nav-item.active { color: var(--accent); }
+.nav-item svg { width: 24px; height: 24px; }
+.nav-item.add-btn {
+  position: relative; top: -14px;
+}
+.nav-item.add-btn .add-circle {
+  width: 52px; height: 52px; border-radius: 50%;
+  background: var(--accent); color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 16px rgba(212,98,43,0.35);
+  transition: transform 0.2s;
+}
+.nav-item.add-btn:active .add-circle { transform: scale(0.92); }
+.nav-item.add-btn svg { width: 28px; height: 28px; }
+
+/* ============ MAIN CONTENT ============ */
+.main {
+  padding-top: calc(var(--top-height) + 12px);
+  padding-bottom: calc(var(--nav-height) + 16px);
+  min-height: 100vh;
+}
+.page { display: none; padding: 0 16px; animation: fadeIn 0.25s ease; }
+.page.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ============ AUTH SCREEN ============ */
+.auth-screen {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  min-height: 100vh; padding: 24px; text-align: center;
+}
+.auth-logo { font-size: 64px; margin-bottom: 16px; }
+.auth-title { font-size: 28px; font-weight: 800; margin-bottom: 8px; }
+.auth-sub { color: var(--text2); margin-bottom: 32px; font-size: 15px; }
+.auth-btn {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 32px; border-radius: var(--radius);
+  background: var(--card); border: 1px solid var(--border);
+  font-size: 16px; font-weight: 700; cursor: pointer;
+  font-family: inherit; color: var(--text);
+  transition: all 0.2s; box-shadow: 0 2px 8px var(--shadow);
+}
+.auth-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px var(--shadow); }
+.auth-btn svg { width: 22px; height: 22px; }
+
+/* ============ SEARCH ============ */
+.search-wrap {
+  position: relative; margin-bottom: 16px;
+}
+.search-input {
+  width: 100%; padding: 14px 48px 14px 44px;
+  border: 2px solid var(--border); border-radius: var(--radius);
+  font-size: 16px; font-family: inherit; background: var(--card);
+  color: var(--text); outline: none; transition: border-color 0.2s;
+}
+.search-input:focus { border-color: var(--accent); }
+.search-input::placeholder { color: var(--text2); }
+.search-icon {
+  position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+  color: var(--text2); width: 20px; height: 20px; pointer-events: none;
+}
+.search-ai-badge {
+  position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+  font-size: 10px; font-weight: 800; padding: 3px 8px;
+  border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px;
+}
+.search-ai-badge.ai { background: var(--accent-light); color: var(--accent); }
+.search-ai-badge.text { background: var(--bg3); color: var(--text2); }
+.search-results { display: flex; flex-direction: column; gap: 10px; }
+.search-hint { text-align: center; color: var(--text2); padding: 40px 20px; font-size: 14px; }
+.search-hint svg { width: 48px; height: 48px; color: var(--border); margin-bottom: 12px; display: block; margin-inline: auto; }
+
+/* ============ CARDS ============ */
+.item-card {
+  background: var(--card); border-radius: var(--radius);
+  border: 1px solid var(--border); overflow: hidden;
+  display: flex; gap: 12px; padding: 12px; cursor: pointer;
+  transition: all 0.2s;
+}
+.item-card:active { transform: scale(0.98); }
+.item-card-photo {
+  width: 72px; height: 72px; border-radius: var(--radius-sm);
+  object-fit: cover; background: var(--bg3); flex-shrink: 0;
+}
+.item-card-photo.placeholder {
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text2); font-size: 28px;
+}
+.item-card-info { flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: center; }
+.item-card-name { font-weight: 700; font-size: 15px; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.item-card-desc { font-size: 13px; color: var(--text2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.item-card-container {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 11px; font-weight: 700; color: var(--accent);
+  background: var(--accent-light); padding: 2px 8px;
+  border-radius: 20px; margin-top: 4px; width: fit-content;
+}
+
+/* ============ CONTAINER CARDS ============ */
+.container-card {
+  background: var(--card); border-radius: var(--radius);
+  border: 1px solid var(--border); padding: 14px; cursor: pointer;
+  transition: all 0.2s; display: flex; align-items: center; gap: 12px;
+}
+.container-card:active { transform: scale(0.98); }
+.container-code {
+  width: 48px; height: 48px; border-radius: var(--radius-sm);
+  background: var(--accent-light); color: var(--accent);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800; font-size: 18px; flex-shrink: 0;
+}
+.container-info { flex: 1; min-width: 0; }
+.container-name { font-weight: 700; font-size: 15px; }
+.container-desc { font-size: 13px; color: var(--text2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.container-count { font-size: 12px; color: var(--text2); margin-top: 2px; }
+.container-children { margin-left: 24px; padding-left: 16px; border-left: 2px solid var(--border); display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
+
+/* ============ FILTERS ============ */
+.filters { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+.filter-chip {
+  padding: 7px 14px; border-radius: 20px; border: 1px solid var(--border);
+  background: var(--card); font-size: 13px; font-weight: 600; cursor: pointer;
+  font-family: inherit; color: var(--text2); transition: all 0.2s;
+  white-space: nowrap;
+}
+.filter-chip.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+/* ============ MODAL ============ */
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 200;
+  background: rgba(0,0,0,0.5); backdrop-filter: blur(4px);
+  display: none; align-items: flex-end; justify-content: center;
+  animation: fadeIn 0.2s;
+}
+.modal-overlay.visible { display: flex; }
+.modal {
+  background: var(--bg); border-radius: 24px 24px 0 0;
+  width: 100%; max-width: 500px; max-height: 92vh;
+  overflow-y: auto; padding: 20px 20px 32px;
+  animation: slideUp 0.3s ease;
+}
+@keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+.modal-handle {
+  width: 36px; height: 4px; border-radius: 4px;
+  background: var(--border); margin: 0 auto 16px;
+}
+.modal-title { font-size: 20px; font-weight: 800; margin-bottom: 16px; }
+
+/* ============ FORMS ============ */
+.form-group { margin-bottom: 16px; }
+.form-label { font-size: 13px; font-weight: 700; color: var(--text2); margin-bottom: 6px; display: block; }
+.form-input, .form-select, .form-textarea {
+  width: 100%; padding: 12px 14px; border: 2px solid var(--border);
+  border-radius: var(--radius-sm); font-size: 15px; font-family: inherit;
+  background: var(--card); color: var(--text); outline: none;
+  transition: border-color 0.2s;
+}
+.form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--accent); }
+.form-textarea { resize: vertical; min-height: 80px; }
+.form-select { appearance: none; cursor: pointer; }
+
+/* ============ BUTTONS ============ */
+.btn {
+  padding: 13px 24px; border-radius: var(--radius-sm);
+  font-size: 15px; font-weight: 700; cursor: pointer;
+  border: none; font-family: inherit; transition: all 0.2s;
+  display: inline-flex; align-items: center; gap: 8px; justify-content: center;
+}
+.btn-primary { background: var(--accent); color: #fff; width: 100%; }
+.btn-primary:hover { background: var(--accent2); }
+.btn-primary:active { transform: scale(0.98); }
+.btn-secondary { background: var(--bg3); color: var(--text); }
+.btn-danger { background: var(--danger); color: #fff; }
+.btn-outline { background: transparent; border: 2px solid var(--border); color: var(--text); }
+.btn-sm { padding: 8px 14px; font-size: 13px; }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.btn-group { display: flex; gap: 8px; margin-top: 8px; }
+.btn-group .btn { flex: 1; }
+
+/* ============ PHOTO CAPTURE ============ */
+.photo-capture {
+  width: 100%; aspect-ratio: 4/3; border-radius: var(--radius);
+  border: 2px dashed var(--border); display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 8px;
+  cursor: pointer; overflow: hidden; position: relative;
+  background: var(--bg3); transition: border-color 0.2s; margin-bottom: 16px;
+}
+.photo-capture:hover { border-color: var(--accent); }
+.photo-capture svg { width: 36px; height: 36px; color: var(--text2); }
+.photo-capture span { font-size: 13px; color: var(--text2); font-weight: 600; }
+.photo-capture img {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: cover; border-radius: var(--radius);
+}
+.photo-capture .remove-photo {
+  position: absolute; top: 8px; right: 8px; z-index: 2;
+  width: 28px; height: 28px; border-radius: 50%;
+  background: rgba(0,0,0,0.6); color: #fff; border: none;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; font-size: 18px;
+}
+.upload-progress {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  height: 4px; background: var(--bg3);
+}
+.upload-progress-bar {
+  height: 100%; background: var(--accent);
+  transition: width 0.3s; border-radius: 4px;
+}
+
+/* ============ QR ============ */
+.qr-sticker {
+  text-align: center; padding: 20px;
+}
+.qr-sticker canvas { margin: 12px auto; display: block; }
+.qr-sticker-code { font-size: 28px; font-weight: 800; margin-top: 8px; }
+.qr-sticker-name { font-size: 14px; color: var(--text2); }
+
+/* ============ QR SCANNER ============ */
+.qr-scanner-wrap {
+  width: 100%; aspect-ratio: 1; border-radius: var(--radius);
+  overflow: hidden; margin-bottom: 16px; position: relative;
+  background: #000;
+}
+
+/* ============ DETAIL VIEW ============ */
+.detail-photo {
+  width: 100%; aspect-ratio: 4/3; border-radius: var(--radius);
+  object-fit: cover; background: var(--bg3); margin-bottom: 16px;
+}
+.detail-title { font-size: 22px; font-weight: 800; margin-bottom: 4px; }
+.detail-desc { color: var(--text2); font-size: 14px; margin-bottom: 12px; line-height: 1.5; }
+.detail-meta { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+.detail-meta-row { display: flex; align-items: center; gap: 8px; font-size: 14px; }
+.detail-meta-label { color: var(--text2); font-weight: 600; min-width: 100px; }
+
+/* ============ LOADING & TOAST ============ */
+.spinner {
+  width: 24px; height: 24px; border: 3px solid var(--border);
+  border-top-color: var(--accent); border-radius: 50%;
+  animation: spin 0.7s linear infinite; margin: 20px auto;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.toast-container { position: fixed; top: 70px; left: 50%; transform: translateX(-50%); z-index: 500; display: flex; flex-direction: column; gap: 8px; }
+.toast {
+  padding: 12px 20px; border-radius: var(--radius-sm);
+  font-size: 14px; font-weight: 600; color: #fff;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+  animation: toastIn 0.3s ease, toastOut 0.3s ease 2.7s forwards;
+  white-space: nowrap;
+}
+.toast.success { background: var(--success); }
+.toast.error { background: var(--danger); }
+.toast.info { background: var(--accent); }
+@keyframes toastIn { from { opacity: 0; transform: translateY(-16px); } }
+@keyframes toastOut { to { opacity: 0; transform: translateY(-16px); } }
+
+/* ============ EXPORT PAGE ============ */
+.export-section { margin-bottom: 20px; }
+.export-section h3 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+.export-section p { font-size: 13px; color: var(--text2); margin-bottom: 12px; }
+
+.section-title { font-size: 18px; font-weight: 800; margin-bottom: 14px; }
+
+/* ============ PRINT STICKERS ============ */
+.sticker-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 12px; margin: 16px 0;
+}
+.sticker-item {
+  border: 1px solid var(--border); border-radius: var(--radius-sm);
+  padding: 8px; text-align: center; cursor: pointer;
+  background: var(--card); transition: all 0.2s;
+}
+.sticker-item.selected { border-color: var(--accent); background: var(--accent-light); }
+.sticker-item canvas { width: 80px !important; height: 80px !important; margin: 4px auto; display: block; }
+.sticker-item-code { font-weight: 800; font-size: 14px; }
+.sticker-item-name { font-size: 10px; color: var(--text2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* ============ EMPTY STATE ============ */
+.empty-state {
+  text-align: center; padding: 48px 20px; color: var(--text2);
+}
+.empty-state svg { width: 56px; height: 56px; color: var(--border); margin-bottom: 12px; }
+.empty-state p { font-size: 14px; }
+
+/* ============ PRINT STYLES ============ */
+@media print {
+  body * { visibility: hidden !important; }
+  .print-area, .print-area * { visibility: visible !important; }
+  .print-area {
+    position: fixed !important; inset: 0 !important;
+    display: flex !important; flex-wrap: wrap !important;
+    align-content: flex-start !important;
+    gap: 8mm !important; padding: 10mm !important;
+    background: #fff !important;
+  }
+  .print-sticker {
+    width: 45mm; text-align: center;
+    page-break-inside: avoid;
+    border: 1px dashed #ccc;
+    padding: 3mm;
+  }
+  .print-sticker canvas { width: 35mm !important; height: 35mm !important; }
+  .print-sticker .ps-code { font-size: 16pt; font-weight: 800; font-family: 'Nunito', sans-serif; }
+  .print-sticker .ps-name { font-size: 8pt; font-family: 'Nunito', sans-serif; }
+}
+
+/* ============ DESKTOP ============ */
+@media (min-width: 600px) {
+  .main { max-width: 540px; margin: 0 auto; }
+  .modal { border-radius: 24px; margin-bottom: 20px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ====== AUTH SCREEN ====== -->
+<div id="authScreen" class="auth-screen">
+  <div class="auth-logo">📦</div>
+  <div class="auth-title">Домашній Інвентар</div>
+  <p class="auth-sub">Організуй речі, знаходь миттєво</p>
+  <button class="auth-btn" onclick="signIn()">
+    <svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.27-4.74 3.27-8.1z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+    Увійти через Google
+  </button>
+</div>
+
+<!-- ====== APP ====== -->
+<div id="app" style="display:none">
+  <!-- Top Bar -->
+  <div class="topbar">
+    <div class="topbar-title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+      Інвентар
+    </div>
+    <div class="topbar-actions">
+      <button class="topbar-btn" onclick="toggleTheme()" title="Тема">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+      </button>
+      <button class="topbar-btn" onclick="signOut()" title="Вийти">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Pages -->
+  <div class="main">
+    <!-- SEARCH PAGE -->
+    <div id="pageSearch" class="page active">
+      <div class="search-wrap">
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+        <input type="text" class="search-input" id="searchInput" placeholder="Шукати речі..." oninput="debounceSearch()">
+        <span class="search-ai-badge" id="searchBadge" style="display:none">AI</span>
+      </div>
+      <div id="searchResults" class="search-results">
+        <div class="search-hint">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+          <p>Введіть запит для пошуку речей.<br>AI розуміє синоніми та категорії</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ITEMS PAGE -->
+    <div id="pageItems" class="page">
+      <div class="section-title">Усі речі</div>
+      <div class="filters" id="itemFilters"></div>
+      <div id="itemsList" class="search-results"></div>
+    </div>
+
+    <!-- CONTAINERS PAGE -->
+    <div id="pageContainers" class="page">
+      <div class="section-title">Контейнери</div>
+      <div id="containersList" style="display:flex;flex-direction:column;gap:10px"></div>
+    </div>
+
+    <!-- EXPORT PAGE -->
+    <div id="pageExport" class="page">
+      <div class="section-title">Експорт / Імпорт</div>
+      
+      <div class="export-section">
+        <h3>📤 Експорт усього</h3>
+        <p>Завантажити JSON з усіма речами та контейнерами</p>
+        <button class="btn btn-outline" onclick="exportAll()">Експортувати все</button>
+      </div>
+
+      <div class="export-section">
+        <h3>📝 Експорт без опису</h3>
+        <p>Тільки речі де немає опису (described: false)</p>
+        <button class="btn btn-outline" onclick="exportUndescribed()">Експортувати без опису</button>
+      </div>
+
+      <div class="export-section">
+        <h3>📥 Імпорт описів</h3>
+        <p>Завантажити JSON з заповненими описами</p>
+        <input type="file" id="importFile" accept=".json" style="display:none" onchange="importDescriptions(event)">
+        <button class="btn btn-outline" onclick="document.getElementById('importFile').click()">Імпортувати описи</button>
+      </div>
+
+      <div class="export-section">
+        <h3>🏷️ Друк наліпок з QR кодами</h3>
+        <p>Оберіть контейнери для друку або створіть нові коди</p>
+        <div class="btn-group" style="margin-bottom: 12px">
+          <button class="btn btn-outline btn-sm" onclick="selectAllStickers()">Обрати всі</button>
+          <button class="btn btn-outline btn-sm" onclick="deselectAllStickers()">Зняти всі</button>
+        </div>
+        <div id="stickerGrid" class="sticker-grid"></div>
+        <div class="btn-group" style="margin-top: 12px">
+          <button class="btn btn-primary" onclick="printSelectedStickers()">🖨️ Друкувати обрані</button>
+        </div>
+        <div style="margin-top:16px; padding-top:16px; border-top:1px solid var(--border)">
+          <h3 style="font-size:15px; font-weight:700; margin-bottom:8px">➕ Створити нові коди</h3>
+          <p style="font-size:13px; color:var(--text2); margin-bottom:12px">Створити та одразу надрукувати порожні коди для нових контейнерів</p>
+          <div style="display:flex; gap:8px; align-items:end">
+            <div style="flex:1">
+              <label class="form-label">Кількість нових кодів</label>
+              <input type="number" class="form-input" id="newCodesCount" value="5" min="1" max="50">
+            </div>
+            <button class="btn btn-primary" style="flex:1" onclick="generateAndPrintNewCodes()">Створити і друкувати</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Nav -->
+  <nav class="bottom-nav">
+    <button class="nav-item active" onclick="showPage('pageSearch', this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      <span>Пошук</span>
+    </button>
+    <button class="nav-item" onclick="showPage('pageItems', this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+      <span>Речі</span>
+    </button>
+    <button class="nav-item add-btn" onclick="openAddModal()">
+      <div class="add-circle">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      </div>
+      <span>Додати</span>
+    </button>
+    <button class="nav-item" onclick="showPage('pageContainers', this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="18" rx="2"/><path d="M2 9h20M10 3v18"/></svg>
+      <span>Контейнери</span>
+    </button>
+    <button class="nav-item" onclick="showPage('pageExport', this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
+      <span>Експорт</span>
+    </button>
+  </nav>
+</div>
+
+<!-- ====== MODALS ====== -->
+<!-- Add Modal -->
+<div class="modal-overlay" id="addModal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="addModalTitle">Додати</div>
+    
+    <!-- Step 1: Choose type -->
+    <div id="addStep1">
+      <div class="photo-capture" id="addPhotoCap" onclick="capturePhoto('addPhotoInput')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
+        <span>Зробити фото</span>
+      </div>
+      <input type="file" id="addPhotoInput" accept="image/*" capture="environment" style="display:none" onchange="handlePhoto(event, 'addPhotoCap')">
+      <p style="font-size:14px; font-weight:700; margin-bottom:12px; text-align:center">Що це?</p>
+      <div class="btn-group">
+        <button class="btn btn-primary" onclick="showAddItem()">📦 Річ</button>
+        <button class="btn btn-outline" onclick="showAddContainer()">🏷️ Контейнер</button>
+      </div>
+    </div>
+
+    <!-- Step 2a: Add Item -->
+    <div id="addItemForm" style="display:none">
+      <div class="form-group">
+        <label class="form-label">Назва *</label>
+        <input type="text" class="form-input" id="itemName" placeholder="Наприклад: Лижні черевики">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Контейнер</label>
+        <div class="btn-group" style="margin-bottom:8px">
+          <button class="btn btn-outline btn-sm" onclick="openQRScanner()" style="flex:1">📷 Сканувати QR</button>
+        </div>
+        <select class="form-select" id="itemContainer">
+          <option value="">-- Без контейнера --</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Опис</label>
+        <textarea class="form-textarea" id="itemDesc" placeholder="Необов'язково"></textarea>
+      </div>
+      <button class="btn btn-primary" onclick="saveItem()">Зберегти річ</button>
+      <button class="btn btn-outline" style="width:100%;margin-top:8px" onclick="closeModal('addModal')">Скасувати</button>
+    </div>
+
+    <!-- Step 2b: Add Container -->
+    <div id="addContainerForm" style="display:none">
+      <div class="form-group">
+        <label class="form-label">Код</label>
+        <input type="text" class="form-input" id="containerCode" readonly style="font-weight:800;font-size:20px;text-align:center;letter-spacing:4px">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Назва *</label>
+        <input type="text" class="form-input" id="containerName" placeholder="Наприклад: Підвал полиця 1">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Опис</label>
+        <textarea class="form-textarea" id="containerDesc" placeholder="Необов'язково"></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Батьківський контейнер</label>
+        <select class="form-select" id="containerParent">
+          <option value="">-- Немає --</option>
+        </select>
+      </div>
+      <button class="btn btn-primary" onclick="saveContainer()">Зберегти контейнер</button>
+      <button class="btn btn-outline" style="width:100%;margin-top:8px" onclick="closeModal('addModal')">Скасувати</button>
+    </div>
+  </div>
+</div>
+
+<!-- Detail Modal -->
+<div class="modal-overlay" id="detailModal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div id="detailContent"></div>
+  </div>
+</div>
+
+<!-- QR Scanner Modal -->
+<div class="modal-overlay" id="qrScanModal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Сканування QR коду</div>
+    <div class="qr-scanner-wrap" id="qrScannerEl"></div>
+    <button class="btn btn-outline" style="width:100%" onclick="closeQRScanner()">Скасувати</button>
+  </div>
+</div>
+
+<!-- Container Detail Modal -->
+<div class="modal-overlay" id="containerDetailModal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div id="containerDetailContent"></div>
+  </div>
+</div>
+
+<!-- Print area (hidden, used for print) -->
+<div class="print-area" id="printArea"></div>
+
+<!-- Toast container -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- ====== SCRIPTS ====== -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-storage-compat.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+
+<script>
+// ============ CONFIG ============
+const firebaseConfig = {
+  apiKey: "AIzaSyBX2UUSpFM6YWbY4cBH-q0lkfa8yB4tGao",
+  authDomain: "orga-cef10.firebaseapp.com",
+  projectId: "orga-cef10",
+  storageBucket: "orga-cef10.firebasestorage.app",
+  messagingSenderId: "976149481290",
+  appId: "1:976149481290:web:a8d55c19c6d68de42663b3"
+};
+const ANTHROPIC_API_KEY = "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";
+
+// ============ INIT ============
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+const storage = firebase.storage();
+
+let currentUser = null;
+let allItems = [];
+let allContainers = [];
+let capturedPhotoBlob = null;
+let currentFilter = 'all';
+let searchTimeout = null;
+let qrScanner = null;
+
+// ============ AUTH ============
+auth.onAuthStateChanged(user => {
+  currentUser = user;
+  if (user) {
+    document.getElementById('authScreen').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    loadData();
+  } else {
+    document.getElementById('authScreen').style.display = 'flex';
+    document.getElementById('app').style.display = 'none';
+  }
+});
+
+function signIn() {
+  const provider = new firebase.auth.GoogleAuthProvider();
+  auth.signInWithPopup(provider).catch(e => showToast('Помилка входу: ' + e.message, 'error'));
+}
+function signOut() {
+  if (confirm('Вийти з облікового запису?')) auth.signOut();
+}
+
+// ============ THEME ============
+function toggleTheme() {
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  document.documentElement.setAttribute('data-theme', isDark ? '' : 'dark');
+  localStorage.setItem('theme', isDark ? 'light' : 'dark');
+}
+(function() {
+  const t = localStorage.getItem('theme');
+  if (t === 'dark' || (!t && matchMedia('(prefers-color-scheme:dark)').matches))
+    document.documentElement.setAttribute('data-theme', 'dark');
+})();
+
+// ============ NAVIGATION ============
+function showPage(id, navEl) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  if (navEl) navEl.classList.add('active');
+  
+  if (id === 'pageItems') renderItems();
+  if (id === 'pageContainers') renderContainers();
+  if (id === 'pageExport') renderStickerGrid();
+}
+
+// ============ DATA LOADING ============
+async function loadData() {
+  try {
+    const [itemsSnap, contSnap] = await Promise.all([
+      db.collection('items').orderBy('createdAt', 'desc').get(),
+      db.collection('containers').orderBy('createdAt', 'desc').get()
+    ]);
+    allItems = itemsSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+    allContainers = contSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+  } catch(e) {
+    showToast('Помилка завантаження даних', 'error');
+  }
+}
+
+// ============ SEARCH ============
+function debounceSearch() {
+  clearTimeout(searchTimeout);
+  searchTimeout = setTimeout(() => performSearch(), 500);
+}
+
+async function performSearch() {
+  const q = document.getElementById('searchInput').value.trim();
+  const badge = document.getElementById('searchBadge');
+  const results = document.getElementById('searchResults');
+  
+  if (!q) {
+    badge.style.display = 'none';
+    results.innerHTML = `<div class="search-hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg><p>Введіть запит для пошуку речей.<br>AI розуміє синоніми та категорії</p></div>`;
+    return;
+  }
+  
+  results.innerHTML = '<div class="spinner"></div>';
+  
+  try {
+    const found = await aiSearch(q, allItems);
+    badge.style.display = 'inline-block';
+    badge.className = 'search-ai-badge ai';
+    badge.textContent = '✨ AI';
+    renderSearchResults(found, results);
+  } catch(e) {
+    const found = fallbackSearch(q, allItems);
+    badge.style.display = 'inline-block';
+    badge.className = 'search-ai-badge text';
+    badge.textContent = 'Текст';
+    renderSearchResults(found, results);
+  }
+}
+
+async function aiSearch(query, items) {
+  if (!items.length) return [];
+  const itemsList = items.map(i => {
+    const cont = allContainers.find(c => c.code === i.containerId);
+    return `ID:${i.id} | ${i.name} | ${i.description || ''} | Контейнер:${i.containerId || ''}${cont ? ' (' + cont.name + ')' : ''}`;
+  }).join('\n');
+  
+  const response = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': ANTHROPIC_API_KEY,
+      'anthropic-version': '2023-06-01',
+      'anthropic-dangerous-direct-browser-access': 'true'
+    },
+    body: JSON.stringify({
+      model: 'claude-haiku-4-5-20251001',
+      max_tokens: 1000,
+      messages: [{
+        role: 'user',
+        content: `Ти помічник для пошуку речей в домашньому інвентарі. Знайди речі що відповідають запиту: "${query}"
+
+Список речей:
+${itemsList}
+
+Поверни тільки JSON масив ID знайдених речей: ["id1", "id2"]
+Якщо нічого не знайдено — поверни []
+Розумій синоніми, категорії, неточні запити українською.`
+      }]
+    })
+  });
+  
+  if (!response.ok) throw new Error('API error');
+  const data = await response.json();
+  const text = data.content[0].text.trim();
+  const match = text.match(/\[.*\]/s);
+  if (!match) return [];
+  const ids = JSON.parse(match[0]);
+  return items.filter(i => ids.includes(i.id));
+}
+
+function fallbackSearch(query, items) {
+  const q = query.toLowerCase();
+  return items.filter(i =>
+    (i.name && i.name.toLowerCase().includes(q)) ||
+    (i.description && i.description.toLowerCase().includes(q)) ||
+    (i.containerId && i.containerId.toLowerCase().includes(q))
+  );
+}
+
+function renderSearchResults(items, container) {
+  if (!items.length) {
+    container.innerHTML = '<div class="empty-state"><p>Нічого не знайдено</p></div>';
+    return;
+  }
+  container.innerHTML = items.map(i => itemCardHTML(i)).join('');
+}
+
+// ============ ITEM CARD HTML ============
+function itemCardHTML(item) {
+  const cont = allContainers.find(c => c.code === item.containerId);
+  const path = cont ? getContainerPath(cont) : '';
+  const photoHTML = item.photoURL
+    ? `<img class="item-card-photo" src="${item.photoURL}" alt="">`
+    : `<div class="item-card-photo placeholder">📦</div>`;
+  return `<div class="item-card" onclick="showItemDetail('${item.id}')">
+    ${photoHTML}
+    <div class="item-card-info">
+      <div class="item-card-name">${esc(item.name)}</div>
+      <div class="item-card-desc">${esc(item.description || 'Без опису')}</div>
+      ${item.containerId ? `<div class="item-card-container">📍 ${esc(item.containerId)}${path ? ' · ' + esc(path) : ''}</div>` : ''}
+    </div>
+  </div>`;
+}
+
+function getContainerPath(container) {
+  let parts = [container.name];
+  let parent = container.parentContainerId ? allContainers.find(c => c.id === container.parentContainerId) : null;
+  while (parent) {
+    parts.unshift(parent.name);
+    parent = parent.parentContainerId ? allContainers.find(c => c.id === parent.parentContainerId) : null;
+  }
+  return parts.join(' → ');
+}
+
+// ============ ITEMS PAGE ============
+function renderItems() {
+  // Filters
+  const filterDiv = document.getElementById('itemFilters');
+  const contOptions = [{code: 'all', name: 'Усі'}, {code: 'nodesc', name: '⚠️ Без опису'}, ...allContainers];
+  filterDiv.innerHTML = contOptions.map(c => {
+    const code = c.code || 'all';
+    return `<button class="filter-chip ${currentFilter === code ? 'active' : ''}" onclick="setFilter('${code}')">${c.code === 'all' ? 'Усі' : c.code === 'nodesc' ? '⚠️ Без опису' : esc(c.code)}</button>`;
+  }).join('');
+  
+  let filtered = allItems;
+  if (currentFilter === 'nodesc') {
+    filtered = allItems.filter(i => !i.described);
+  } else if (currentFilter !== 'all') {
+    filtered = allItems.filter(i => i.containerId === currentFilter);
+  }
+  
+  const list = document.getElementById('itemsList');
+  if (!filtered.length) {
+    list.innerHTML = '<div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg><p>Речей ще немає</p></div>';
+    return;
+  }
+  list.innerHTML = filtered.map(i => itemCardHTML(i)).join('');
+}
+
+function setFilter(code) {
+  currentFilter = code;
+  renderItems();
+}
+
+// ============ CONTAINERS PAGE ============
+function renderContainers() {
+  const list = document.getElementById('containersList');
+  if (!allContainers.length) {
+    list.innerHTML = '<div class="empty-state"><p>Контейнерів ще немає</p></div>';
+    return;
+  }
+  
+  const roots = allContainers.filter(c => !c.parentContainerId);
+  list.innerHTML = roots.map(c => containerTreeHTML(c)).join('');
+}
+
+function containerTreeHTML(container) {
+  const children = allContainers.filter(c => c.parentContainerId === container.id);
+  const count = allItems.filter(i => i.containerId === container.code).length;
+  return `<div>
+    <div class="container-card" onclick="showContainerDetail('${container.id}')">
+      <div class="container-code">${esc(container.code)}</div>
+      <div class="container-info">
+        <div class="container-name">${esc(container.name)}</div>
+        ${container.description ? `<div class="container-desc">${esc(container.description)}</div>` : ''}
+        <div class="container-count">${count} ${count === 1 ? 'річ' : count < 5 ? 'речі' : 'речей'}</div>
+      </div>
+    </div>
+    ${children.length ? `<div class="container-children">${children.map(ch => containerTreeHTML(ch)).join('')}</div>` : ''}
+  </div>`;
+}
+
+// ============ ADD MODAL ============
+function openAddModal() {
+  capturedPhotoBlob = null;
+  const cap = document.getElementById('addPhotoCap');
+  cap.querySelector('img')?.remove();
+  cap.querySelector('.remove-photo')?.remove();
+  cap.querySelector('.upload-progress')?.remove();
+  document.getElementById('addStep1').style.display = 'block';
+  document.getElementById('addItemForm').style.display = 'none';
+  document.getElementById('addContainerForm').style.display = 'none';
+  document.getElementById('addModalTitle').textContent = 'Додати';
+  openModal('addModal');
+}
+
+function showAddItem() {
+  document.getElementById('addStep1').style.display = 'none';
+  document.getElementById('addItemForm').style.display = 'block';
+  document.getElementById('addModalTitle').textContent = 'Нова річ';
+  document.getElementById('itemName').value = '';
+  document.getElementById('itemDesc').value = '';
+  populateContainerSelect('itemContainer');
+}
+
+function showAddContainer() {
+  document.getElementById('addStep1').style.display = 'none';
+  document.getElementById('addContainerForm').style.display = 'block';
+  document.getElementById('addModalTitle').textContent = 'Новий контейнер';
+  document.getElementById('containerCode').value = getNextCode();
+  document.getElementById('containerName').value = '';
+  document.getElementById('containerDesc').value = '';
+  populateContainerSelect('containerParent', true);
+}
+
+function populateContainerSelect(selectId, excludeSelf) {
+  const sel = document.getElementById(selectId);
+  sel.innerHTML = '<option value="">-- Без контейнера --</option>';
+  allContainers.forEach(c => {
+    sel.innerHTML += `<option value="${c.code}">${c.code} — ${esc(c.name)}</option>`;
+  });
+}
+
+// ============ NEXT CODE ============
+function getNextCode() {
+  const existing = allContainers.map(c => c.code).sort();
+  let a = 0, b = 0; // AA = 0,0
+  for (let i = 0; i < 676; i++) {
+    const code = String.fromCharCode(65 + Math.floor(i / 26)) + String.fromCharCode(65 + (i % 26));
+    if (!existing.includes(code)) return code;
+  }
+  return 'ZZ';
+}
+
+// ============ PHOTO ============
+function capturePhoto(inputId) {
+  document.getElementById(inputId).click();
+}
+
+async function handlePhoto(event, captureElId) {
+  const file = event.target.files[0];
+  if (!file) return;
+  
+  const blob = await compressImage(file, 800, 0.7);
+  capturedPhotoBlob = blob;
+  
+  const cap = document.getElementById(captureElId);
+  cap.querySelector('img')?.remove();
+  cap.querySelector('.remove-photo')?.remove();
+  
+  const img = document.createElement('img');
+  img.src = URL.createObjectURL(blob);
+  cap.appendChild(img);
+  
+  const btn = document.createElement('button');
+  btn.className = 'remove-photo';
+  btn.innerHTML = '✕';
+  btn.onclick = (e) => {
+    e.stopPropagation();
+    capturedPhotoBlob = null;
+    img.remove();
+    btn.remove();
+    event.target.value = '';
+  };
+  cap.appendChild(btn);
+}
+
+function compressImage(file, maxSize, quality) {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        let w = img.width, h = img.height;
+        if (w > h && w > maxSize) { h = h * maxSize / w; w = maxSize; }
+        else if (h > maxSize) { w = w * maxSize / h; h = maxSize; }
+        canvas.width = w; canvas.height = h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+        canvas.toBlob(resolve, 'image/jpeg', quality);
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+async function uploadPhoto(blob) {
+  const path = `items/${currentUser.uid}/${Date.now()}.jpg`;
+  const ref = storage.ref(path);
+  
+  const cap = document.getElementById('addPhotoCap');
+  let progressEl = cap.querySelector('.upload-progress');
+  if (!progressEl) {
+    progressEl = document.createElement('div');
+    progressEl.className = 'upload-progress';
+    progressEl.innerHTML = '<div class="upload-progress-bar" style="width:0%"></div>';
+    cap.appendChild(progressEl);
+  }
+  
+  const task = ref.put(blob);
+  task.on('state_changed', snap => {
+    const pct = (snap.bytesTransferred / snap.totalBytes) * 100;
+    progressEl.querySelector('.upload-progress-bar').style.width = pct + '%';
+  });
+  
+  await task;
+  return await ref.getDownloadURL();
+}
+
+// ============ SAVE ITEM ============
+async function saveItem() {
+  const name = document.getElementById('itemName').value.trim();
+  if (!name) { showToast('Введіть назву', 'error'); return; }
+  
+  const containerId = document.getElementById('itemContainer').value;
+  const desc = document.getElementById('itemDesc').value.trim();
+  
+  const btn = document.querySelector('#addItemForm .btn-primary');
+  btn.disabled = true; btn.textContent = 'Зберігаю...';
+  
+  try {
+    let photoURL = '';
+    if (capturedPhotoBlob) photoURL = await uploadPhoto(capturedPhotoBlob);
+    
+    const docRef = await db.collection('items').add({
+      name,
+      description: desc,
+      photoURL,
+      containerId,
+      described: !!desc,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+    
+    allItems.unshift({ id: docRef.id, name, description: desc, photoURL, containerId, described: !!desc });
+    closeModal('addModal');
+    showToast('Річ додано!', 'success');
+  } catch(e) {
+    showToast('Помилка збереження: ' + e.message, 'error');
+  } finally {
+    btn.disabled = false; btn.textContent = 'Зберегти річ';
+  }
+}
+
+// ============ SAVE CONTAINER ============
+async function saveContainer() {
+  const code = document.getElementById('containerCode').value.trim();
+  const name = document.getElementById('containerName').value.trim();
+  if (!name) { showToast('Введіть назву', 'error'); return; }
+  
+  const desc = document.getElementById('containerDesc').value.trim();
+  const parentCode = document.getElementById('containerParent').value;
+  const parentContainer = parentCode ? allContainers.find(c => c.code === parentCode) : null;
+  
+  const btn = document.querySelector('#addContainerForm .btn-primary');
+  btn.disabled = true; btn.textContent = 'Зберігаю...';
+  
+  try {
+    let photoURL = '';
+    if (capturedPhotoBlob) photoURL = await uploadPhoto(capturedPhotoBlob);
+    
+    const docRef = await db.collection('containers').add({
+      code,
+      name,
+      description: desc,
+      photoURL,
+      parentContainerId: parentContainer ? parentContainer.id : null,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+    
+    allContainers.unshift({ id: docRef.id, code, name, description: desc, photoURL, parentContainerId: parentContainer ? parentContainer.id : null });
+    closeModal('addModal');
+    showToast('Контейнер створено!', 'success');
+    showQRSticker(code, name);
+  } catch(e) {
+    showToast('Помилка збереження: ' + e.message, 'error');
+  } finally {
+    btn.disabled = false; btn.textContent = 'Зберегти контейнер';
+  }
+}
+
+// ============ ITEM DETAIL ============
+function showItemDetail(id) {
+  const item = allItems.find(i => i.id === id);
+  if (!item) return;
+  const cont = allContainers.find(c => c.code === item.containerId);
+  const path = cont ? getContainerPath(cont) : '';
+  
+  document.getElementById('detailContent').innerHTML = `
+    ${item.photoURL ? `<img class="detail-photo" src="${item.photoURL}" alt="">` : ''}
+    <div class="detail-title">${esc(item.name)}</div>
+    <div class="detail-desc">${esc(item.description || 'Без опису')}</div>
+    <div class="detail-meta">
+      ${item.containerId ? `<div class="detail-meta-row"><span class="detail-meta-label">Контейнер:</span><span>${esc(item.containerId)}${cont ? ' — ' + esc(cont.name) : ''}</span></div>` : ''}
+      ${path ? `<div class="detail-meta-row"><span class="detail-meta-label">Шлях:</span><span>${esc(path)}</span></div>` : ''}
+      <div class="detail-meta-row"><span class="detail-meta-label">Описано:</span><span>${item.described ? '✅ Так' : '⚠️ Ні'}</span></div>
+    </div>
+    <div class="btn-group">
+      <button class="btn btn-outline" onclick="editItem('${item.id}')">✏️ Редагувати</button>
+      <button class="btn btn-danger btn-sm" onclick="deleteItem('${item.id}')">🗑️ Видалити</button>
+    </div>
+  `;
+  openModal('detailModal');
+}
+
+async function deleteItem(id) {
+  if (!confirm('Видалити цю річ?')) return;
+  try {
+    await db.collection('items').doc(id).delete();
+    allItems = allItems.filter(i => i.id !== id);
+    closeModal('detailModal');
+    showToast('Видалено', 'info');
+    renderItems();
+  } catch(e) {
+    showToast('Помилка видалення', 'error');
+  }
+}
+
+function editItem(id) {
+  const item = allItems.find(i => i.id === id);
+  if (!item) return;
+  closeModal('detailModal');
+  
+  setTimeout(() => {
+    openAddModal();
+    document.getElementById('addStep1').style.display = 'none';
+    document.getElementById('addItemForm').style.display = 'block';
+    document.getElementById('addModalTitle').textContent = 'Редагувати річ';
+    document.getElementById('itemName').value = item.name;
+    document.getElementById('itemDesc').value = item.description || '';
+    populateContainerSelect('itemContainer');
+    document.getElementById('itemContainer').value = item.containerId || '';
+    
+    if (item.photoURL) {
+      const cap = document.getElementById('addPhotoCap');
+      const img = document.createElement('img');
+      img.src = item.photoURL;
+      cap.appendChild(img);
+    }
+    
+    // Replace save button
+    const btn = document.querySelector('#addItemForm .btn-primary');
+    btn.textContent = 'Оновити';
+    btn.onclick = async () => {
+      btn.disabled = true; btn.textContent = 'Зберігаю...';
+      try {
+        const name = document.getElementById('itemName').value.trim();
+        const desc = document.getElementById('itemDesc').value.trim();
+        const containerId = document.getElementById('itemContainer').value;
+        
+        let photoURL = item.photoURL;
+        if (capturedPhotoBlob) photoURL = await uploadPhoto(capturedPhotoBlob);
+        
+        await db.collection('items').doc(id).update({
+          name, description: desc, containerId, photoURL,
+          described: !!desc,
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        
+        Object.assign(item, { name, description: desc, containerId, photoURL, described: !!desc });
+        closeModal('addModal');
+        showToast('Оновлено!', 'success');
+        renderItems();
+      } catch(e) {
+        showToast('Помилка: ' + e.message, 'error');
+      } finally {
+        btn.disabled = false; btn.textContent = 'Оновити';
+        btn.onclick = () => saveItem();
+      }
+    };
+  }, 300);
+}
+
+// ============ CONTAINER DETAIL ============
+function showContainerDetail(id) {
+  const cont = allContainers.find(c => c.id === id);
+  if (!cont) return;
+  const items = allItems.filter(i => i.containerId === cont.code);
+  const children = allContainers.filter(c => c.parentContainerId === id);
+  
+  document.getElementById('containerDetailContent').innerHTML = `
+    <div class="detail-title">${esc(cont.code)} — ${esc(cont.name)}</div>
+    ${cont.description ? `<div class="detail-desc">${esc(cont.description)}</div>` : ''}
+    <div class="qr-sticker" id="contQR_${cont.id}"></div>
+    <div class="btn-group" style="margin-bottom:16px">
+      <button class="btn btn-outline btn-sm" onclick="printSingleSticker('${cont.code}', '${esc(cont.name)}')">🖨️ Друкувати наліпку</button>
+      <button class="btn btn-danger btn-sm" onclick="deleteContainer('${cont.id}')">🗑️ Видалити</button>
+    </div>
+    ${children.length ? `<div style="margin-bottom:12px"><strong>Вкладені контейнери:</strong></div>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px">
+        ${children.map(ch => `<div class="container-card" onclick="closeModal('containerDetailModal');setTimeout(()=>showContainerDetail('${ch.id}'),300)">
+          <div class="container-code">${esc(ch.code)}</div>
+          <div class="container-info"><div class="container-name">${esc(ch.name)}</div></div>
+        </div>`).join('')}
+      </div>` : ''}
+    ${items.length ? `<div style="margin-bottom:12px"><strong>Речі (${items.length}):</strong></div>
+      <div class="search-results">${items.map(i => itemCardHTML(i)).join('')}</div>` : '<div class="empty-state"><p>Контейнер порожній</p></div>'}
+  `;
+  
+  openModal('containerDetailModal');
+  
+  // Generate QR
+  setTimeout(() => {
+    const qrEl = document.getElementById('contQR_' + cont.id);
+    if (qrEl) {
+      qrEl.innerHTML = '';
+      new QRCode(qrEl, { text: cont.code, width: 128, height: 128, colorDark: getComputedStyle(document.documentElement).getPropertyValue('--text').trim() || '#000', colorLight: 'transparent' });
+      qrEl.innerHTML += `<div class="qr-sticker-code">${esc(cont.code)}</div><div class="qr-sticker-name">${esc(cont.name)}</div>`;
+    }
+  }, 100);
+}
+
+async function deleteContainer(id) {
+  if (!confirm('Видалити контейнер? Речі в ньому залишаться без контейнера.')) return;
+  try {
+    await db.collection('containers').doc(id).delete();
+    allContainers = allContainers.filter(c => c.id !== id);
+    closeModal('containerDetailModal');
+    showToast('Контейнер видалено', 'info');
+    renderContainers();
+  } catch(e) {
+    showToast('Помилка видалення', 'error');
+  }
+}
+
+// ============ QR STICKER ============
+function showQRSticker(code, name) {
+  document.getElementById('detailContent').innerHTML = `
+    <div class="qr-sticker" id="newQRSticker"></div>
+    <button class="btn btn-primary" onclick="printSingleSticker('${code}', '${esc(name)}')">🖨️ Друкувати наліпку</button>
+    <button class="btn btn-outline" style="width:100%;margin-top:8px" onclick="closeModal('detailModal')">Закрити</button>
+  `;
+  openModal('detailModal');
+  setTimeout(() => {
+    const el = document.getElementById('newQRSticker');
+    new QRCode(el, { text: code, width: 160, height: 160 });
+    el.innerHTML += `<div class="qr-sticker-code">${code}</div><div class="qr-sticker-name">${name}</div>`;
+  }, 100);
+}
+
+function printSingleSticker(code, name) {
+  printStickers([{ code, name }]);
+}
+
+// ============ QR SCANNER ============
+function openQRScanner() {
+  openModal('qrScanModal');
+  setTimeout(() => {
+    try {
+      qrScanner = new Html5Qrcode('qrScannerEl');
+      qrScanner.start(
+        { facingMode: 'environment' },
+        { fps: 10, qrbox: { width: 250, height: 250 } },
+        (text) => {
+          const cont = allContainers.find(c => c.code === text);
+          if (cont) {
+            document.getElementById('itemContainer').value = cont.code;
+            showToast(`Контейнер: ${cont.code} — ${cont.name}`, 'success');
+          } else {
+            document.getElementById('itemContainer').value = text;
+            showToast(`Код: ${text}`, 'info');
+          }
+          closeQRScanner();
+        }
+      ).catch(e => showToast('Камера недоступна', 'error'));
+    } catch(e) {
+      showToast('Помилка сканера', 'error');
+    }
+  }, 300);
+}
+
+function closeQRScanner() {
+  if (qrScanner) {
+    qrScanner.stop().catch(() => {});
+    qrScanner.clear();
+    qrScanner = null;
+  }
+  closeModal('qrScanModal');
+}
+
+// ============ EXPORT / IMPORT ============
+function exportAll() {
+  const data = { items: allItems, containers: allContainers, exportDate: new Date().toISOString() };
+  downloadJSON(data, 'inventory-full.json');
+  showToast('Експортовано!', 'success');
+}
+
+function exportUndescribed() {
+  const items = allItems.filter(i => !i.described);
+  const data = { items, exportDate: new Date().toISOString() };
+  downloadJSON(data, 'inventory-undescribed.json');
+  showToast(`Експортовано ${items.length} речей`, 'success');
+}
+
+async function importDescriptions(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  try {
+    const text = await file.text();
+    const data = JSON.parse(text);
+    if (!data.items || !Array.isArray(data.items)) throw new Error('Невірний формат');
+    
+    let updated = 0;
+    for (const imp of data.items) {
+      if (imp.id && imp.description) {
+        await db.collection('items').doc(imp.id).update({
+          description: imp.description,
+          described: true,
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        const local = allItems.find(i => i.id === imp.id);
+        if (local) { local.description = imp.description; local.described = true; }
+        updated++;
+      }
+    }
+    showToast(`Оновлено ${updated} описів`, 'success');
+    event.target.value = '';
+  } catch(e) {
+    showToast('Помилка імпорту: ' + e.message, 'error');
+  }
+}
+
+function downloadJSON(data, filename) {
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  a.click();
+}
+
+// ============ STICKER GRID & PRINT ============
+let selectedStickers = new Set();
+
+function renderStickerGrid() {
+  const grid = document.getElementById('stickerGrid');
+  if (!allContainers.length) {
+    grid.innerHTML = '<p style="color:var(--text2);font-size:13px">Немає контейнерів</p>';
+    return;
+  }
+  grid.innerHTML = allContainers.map(c => `
+    <div class="sticker-item ${selectedStickers.has(c.code) ? 'selected' : ''}" onclick="toggleSticker('${c.code}', this)" id="sticker_${c.code}">
+      <div id="stickerQR_${c.code}" style="display:flex;justify-content:center"></div>
+      <div class="sticker-item-code">${esc(c.code)}</div>
+      <div class="sticker-item-name">${esc(c.name)}</div>
+    </div>
+  `).join('');
+  
+  // Generate mini QRs
+  setTimeout(() => {
+    allContainers.forEach(c => {
+      const el = document.getElementById('stickerQR_' + c.code);
+      if (el && !el.querySelector('canvas')) {
+        new QRCode(el, { text: c.code, width: 80, height: 80, colorDark: '#333', colorLight: '#fff' });
+      }
+    });
+  }, 100);
+}
+
+function toggleSticker(code, el) {
+  if (selectedStickers.has(code)) {
+    selectedStickers.delete(code);
+    el.classList.remove('selected');
+  } else {
+    selectedStickers.add(code);
+    el.classList.add('selected');
+  }
+}
+function selectAllStickers() {
+  allContainers.forEach(c => selectedStickers.add(c.code));
+  renderStickerGrid();
+}
+function deselectAllStickers() {
+  selectedStickers.clear();
+  renderStickerGrid();
+}
+
+function printSelectedStickers() {
+  if (!selectedStickers.size) { showToast('Оберіть хоча б один контейнер', 'error'); return; }
+  const stickers = allContainers
+    .filter(c => selectedStickers.has(c.code))
+    .map(c => ({ code: c.code, name: c.name }));
+  printStickers(stickers);
+}
+
+async function generateAndPrintNewCodes() {
+  const count = parseInt(document.getElementById('newCodesCount').value) || 5;
+  if (count < 1 || count > 50) { showToast('Від 1 до 50 кодів', 'error'); return; }
+  
+  const existingCodes = new Set(allContainers.map(c => c.code));
+  const newCodes = [];
+  
+  for (let i = 0; i < 676 && newCodes.length < count; i++) {
+    const code = String.fromCharCode(65 + Math.floor(i / 26)) + String.fromCharCode(65 + (i % 26));
+    if (!existingCodes.has(code)) newCodes.push(code);
+  }
+  
+  if (!newCodes.length) { showToast('Всі коди використані', 'error'); return; }
+  
+  // Save placeholder containers to Firestore
+  try {
+    for (const code of newCodes) {
+      const docRef = await db.collection('containers').add({
+        code,
+        name: `Контейнер ${code}`,
+        description: '',
+        photoURL: '',
+        parentContainerId: null,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+      allContainers.push({ id: docRef.id, code, name: `Контейнер ${code}`, description: '', photoURL: '', parentContainerId: null });
+    }
+    
+    showToast(`Створено ${newCodes.length} нових кодів`, 'success');
+    
+    // Print them
+    const stickers = newCodes.map(code => ({ code, name: `Контейнер ${code}` }));
+    printStickers(stickers);
+    
+    renderStickerGrid();
+    renderContainers();
+  } catch(e) {
+    showToast('Помилка створення: ' + e.message, 'error');
+  }
+}
+
+function printStickers(stickers) {
+  const printArea = document.getElementById('printArea');
+  printArea.innerHTML = '';
+  
+  stickers.forEach(s => {
+    const div = document.createElement('div');
+    div.className = 'print-sticker';
+    div.innerHTML = `<div id="pqr_${s.code}"></div><div class="ps-code">${s.code}</div><div class="ps-name">${s.name}</div>`;
+    printArea.appendChild(div);
+  });
+  
+  setTimeout(() => {
+    stickers.forEach(s => {
+      const el = document.getElementById('pqr_' + s.code);
+      if (el) new QRCode(el, { text: s.code, width: 140, height: 140, colorDark: '#000', colorLight: '#fff' });
+    });
+    setTimeout(() => window.print(), 300);
+  }, 100);
+}
+
+// ============ MODAL UTILS ============
+function openModal(id) {
+  document.getElementById(id).classList.add('visible');
+  document.body.style.overflow = 'hidden';
+}
+function closeModal(id) {
+  document.getElementById(id).classList.remove('visible');
+  document.body.style.overflow = '';
+}
+
+// Close modal on overlay click
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) {
+      overlay.classList.remove('visible');
+      document.body.style.overflow = '';
+      if (overlay.id === 'qrScanModal') closeQRScanner();
+    }
+  });
+});
+
+// ============ TOAST ============
+function showToast(msg, type = 'info') {
+  const container = document.getElementById('toastContainer');
+  const toast = document.createElement('div');
+  toast.className = `toast ${type}`;
+  toast.textContent = msg;
+  container.appendChild(toast);
+  setTimeout(() => toast.remove(), 3000);
+}
+
+// ============ UTILS ============
+function esc(str) {
+  if (!str) return '';
+  const d = document.createElement('div');
+  d.textContent = str;
+  return d.innerHTML;
+}
+</script>
+</body>
+</html>
