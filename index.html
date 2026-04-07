@@ -441,6 +441,9 @@ body {
       Інвентар
     </div>
     <div class="topbar-actions">
+      <button class="topbar-btn" onclick="openSettings()" title="Налаштування">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+      </button>
       <button class="topbar-btn" onclick="toggleTheme()" title="Тема">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
       </button>
@@ -652,6 +655,22 @@ body {
   </div>
 </div>
 
+<!-- Settings Modal -->
+<div class="modal-overlay" id="settingsModal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">⚙️ Налаштування</div>
+    <div class="form-group">
+      <label class="form-label">Anthropic API ключ (для AI пошуку)</label>
+      <input type="password" class="form-input" id="apiKeyInput" placeholder="sk-ant-api03-...">
+      <p style="font-size:12px;color:var(--text2);margin-top:6px">Ключ зберігається тільки у вашому браузері і не передається нікуди крім Anthropic API.</p>
+    </div>
+    <div id="apiKeyStatus" style="margin-bottom:12px"></div>
+    <button class="btn btn-primary" onclick="saveApiKey()">Зберегти ключ</button>
+    <button class="btn btn-outline" style="width:100%;margin-top:8px" onclick="closeModal('settingsModal')">Закрити</button>
+  </div>
+</div>
+
 <!-- Print area (hidden, used for print) -->
 <div class="print-area" id="printArea"></div>
 
@@ -676,7 +695,7 @@ const firebaseConfig = {
   messagingSenderId: "976149481290",
   appId: "1:976149481290:web:a8d55c19c6d68de42663b3"
 };
-const ANTHROPIC_API_KEY = "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";
+let ANTHROPIC_API_KEY = localStorage.getItem('anthropic_api_key') || '';
 
 // ============ INIT ============
 firebase.initializeApp(firebaseConfig);
@@ -786,6 +805,7 @@ async function performSearch() {
 }
 
 async function aiSearch(query, items) {
+  if (!ANTHROPIC_API_KEY) throw new Error('No API key');
   if (!items.length) return [];
   const itemsList = items.map(i => {
     const cont = allContainers.find(c => c.code === i.containerId);
@@ -1490,6 +1510,31 @@ function printStickers(stickers) {
     });
     setTimeout(() => window.print(), 300);
   }, 100);
+}
+
+// ============ SETTINGS ============
+function openSettings() {
+  document.getElementById('apiKeyInput').value = ANTHROPIC_API_KEY;
+  updateApiKeyStatus();
+  openModal('settingsModal');
+}
+
+function saveApiKey() {
+  const key = document.getElementById('apiKeyInput').value.trim();
+  localStorage.setItem('anthropic_api_key', key);
+  ANTHROPIC_API_KEY = key;
+  updateApiKeyStatus();
+  showToast('API ключ збережено!', 'success');
+  closeModal('settingsModal');
+}
+
+function updateApiKeyStatus() {
+  const el = document.getElementById('apiKeyStatus');
+  if (ANTHROPIC_API_KEY) {
+    el.innerHTML = '<span style="color:var(--success);font-size:13px;font-weight:600">✅ Ключ встановлено — AI пошук активний</span>';
+  } else {
+    el.innerHTML = '<span style="color:var(--danger);font-size:13px;font-weight:600">⚠️ Ключ не встановлено — працює тільки текстовий пошук</span>';
+  }
 }
 
 // ============ MODAL UTILS ============
