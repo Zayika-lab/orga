@@ -11,16 +11,17 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#f4f1eb;--bg2:#fff;--bg3:#e8e4dc;--text:#2c2c2c;--text2:#6b6b6b;--accent:#d4622b;--accent2:#b8511e;--accent-light:rgba(212,98,43,.1);--border:#d9d5cd;--shadow:rgba(0,0,0,.06);--card:#fff;--nav-bg:rgba(255,255,255,.92);--success:#3a8a5c;--danger:#c0392b;--radius:14px;--radius-sm:8px;--nav-height:72px;--top-height:56px}
-[data-theme=dark]{--bg:#121218;--bg2:#1c1c26;--bg3:#252532;--text:#e8e6e1;--text2:#8a8a9a;--accent:#e87a3f;--accent2:#f09060;--accent-light:rgba(232,122,63,.12);--border:#2e2e3e;--shadow:rgba(0,0,0,.2);--card:#1e1e2a;--nav-bg:rgba(28,28,38,.94);--success:#4caf6a;--danger:#e74c3c}
+:root{--bg:#f4f1eb;--bg2:#fff;--bg3:#e8e4dc;--text:#2c2c2c;--text2:#6b6b6b;--accent:#d4622b;--accent2:#b8511e;--accent-light:rgba(212,98,43,.1);--border:#d9d5cd;--shadow:rgba(0,0,0,.06);--card:#fff;--nav-bg:rgba(255,255,255,.92);--success:#3a8a5c;--danger:#c0392b;--radius:14px;--radius-sm:8px;--nav-height:72px;--top-height:56px;--star-color:#f0a500;--trash-color:#9b59b6}
+[data-theme=dark]{--bg:#121218;--bg2:#1c1c26;--bg3:#252532;--text:#e8e6e1;--text2:#8a8a9a;--accent:#e87a3f;--accent2:#f09060;--accent-light:rgba(232,122,63,.12);--border:#2e2e3e;--shadow:rgba(0,0,0,.2);--card:#1e1e2a;--nav-bg:rgba(28,28,38,.94);--success:#4caf6a;--danger:#e74c3c;--star-color:#f5b800;--trash-color:#bb86fc}
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;-webkit-tap-highlight-color:transparent}
 ::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
 .topbar{position:fixed;top:0;left:0;right:0;z-index:100;height:var(--top-height);background:var(--nav-bg);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);display:flex;align-items:center;justify-content:space-between;padding:0 16px;border-bottom:1px solid var(--border)}
 .topbar-title{font-weight:800;font-size:18px;display:flex;align-items:center;gap:8px}.topbar-title svg{width:22px;height:22px;color:var(--accent)}
-.topbar-actions{display:flex;gap:8px;align-items:center}
+.topbar-actions{display:flex;gap:4px;align-items:center}
 .topbar-btn{background:none;border:none;color:var(--text2);cursor:pointer;width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:50%;transition:all .2s}
 .topbar-btn:hover{background:var(--bg3);color:var(--text)}.topbar-btn svg{width:20px;height:20px}
+.topbar-btn.active-mode{color:var(--accent);background:var(--accent-light)}
 .bottom-nav{position:fixed;bottom:0;left:0;right:0;z-index:100;height:var(--nav-height);background:var(--nav-bg);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid var(--border);display:flex;align-items:stretch;justify-content:space-around;padding-bottom:env(safe-area-inset-bottom,0)}
 .nav-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;color:var(--text2);transition:all .2s;border:none;background:none;font-family:inherit;font-size:10px;font-weight:600}
 .nav-item.active{color:var(--accent)}.nav-item svg{width:24px;height:24px}
@@ -35,7 +36,7 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-
 .auth-sub{color:var(--text2);margin-bottom:32px;font-size:15px}
 .auth-btn{display:flex;align-items:center;gap:12px;padding:14px 32px;border-radius:var(--radius);background:var(--card);border:1px solid var(--border);font-size:16px;font-weight:700;cursor:pointer;font-family:inherit;color:var(--text);transition:all .2s;box-shadow:0 2px 8px var(--shadow)}
 .auth-btn:hover{transform:translateY(-2px)}.auth-btn svg{width:22px;height:22px}
-.search-wrap{position:relative;margin-bottom:16px}
+.search-wrap{position:relative;margin-bottom:12px}
 .search-input{width:100%;padding:14px 48px 14px 44px;border:2px solid var(--border);border-radius:var(--radius);font-size:16px;font-family:inherit;background:var(--card);color:var(--text);outline:none;transition:border-color .2s}
 .search-input:focus{border-color:var(--accent)}.search-input::placeholder{color:var(--text2)}
 .search-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--text2);width:20px;height:20px;pointer-events:none}
@@ -44,23 +45,37 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-
 .search-results{display:flex;flex-direction:column;gap:10px}
 .search-hint{text-align:center;color:var(--text2);padding:40px 20px;font-size:14px}
 .search-hint svg{width:48px;height:48px;color:var(--border);margin-bottom:12px;display:block;margin-inline:auto}
-.item-card{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);overflow:hidden;display:flex;gap:12px;padding:12px;cursor:pointer;transition:all .2s}
+.item-card{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);overflow:hidden;display:flex;gap:12px;padding:12px;cursor:pointer;transition:all .2s;position:relative}
 .item-card:active{transform:scale(.98)}
+.item-card.selected-card{border-color:var(--accent);background:var(--accent-light)}
 .item-card-photo{width:72px;height:72px;border-radius:var(--radius-sm);object-fit:cover;background:var(--bg3);flex-shrink:0}
 .item-card-photo.placeholder{display:flex;align-items:center;justify-content:center;color:var(--text2);font-size:28px}
 .item-card-info{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center}
-.item-card-name{font-weight:700;font-size:15px;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.item-card-name{font-weight:700;font-size:15px;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:flex;align-items:center;gap:6px}
 .item-card-desc{font-size:13px;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .item-card-container{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;color:var(--accent);background:var(--accent-light);padding:2px 8px;border-radius:20px;margin-top:4px;width:fit-content}
+.badge-star,.badge-trash{font-size:14px;opacity:.4}.badge-star.active{opacity:1;color:var(--star-color)}.badge-trash.active{opacity:1;color:var(--trash-color)}
+.selection-checkbox{width:22px;height:22px;border-radius:6px;border:2px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .2s;margin-right:4px}
+.selection-checkbox.checked{background:var(--accent);border-color:var(--accent);color:#fff}
 .container-card{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);padding:14px;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:12px}
 .container-card:active{transform:scale(.98)}
+.container-card.selected-card{border-color:var(--accent);background:var(--accent-light)}
 .container-code{width:48px;height:48px;border-radius:var(--radius-sm);background:var(--accent-light);color:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;flex-shrink:0}
 .container-photo{width:48px;height:48px;border-radius:var(--radius-sm);object-fit:cover;flex-shrink:0}
 .container-info{flex:1;min-width:0}.container-name{font-weight:700;font-size:15px}
 .container-desc{font-size:13px;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .container-count{font-size:12px;color:var(--text2);margin-top:2px}
-.container-children{margin-left:24px;padding-left:16px;border-left:2px solid var(--border);display:flex;flex-direction:column;gap:8px;margin-top:8px}
-.filters{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.container-children{margin-left:24px;padding-left:16px;border-left:2px solid var(--border);display:flex;flex-direction:column;gap:8px;margin-top:8px;overflow:hidden;transition:max-height .3s ease}
+.container-children.collapsed{max-height:0!important;margin-top:0;padding:0;overflow:hidden}
+.collapse-toggle{background:none;border:none;color:var(--text2);font-size:12px;font-weight:700;cursor:pointer;padding:4px 8px;margin-top:4px;display:flex;align-items:center;gap:4px;font-family:inherit}
+.collapse-toggle svg{width:14px;height:14px;transition:transform .2s}
+.collapse-toggle.collapsed svg{transform:rotate(-90deg)}
+.filters-row{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.filters-toggle{background:none;border:none;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text2);transition:all .2s;flex-shrink:0}
+.filters-toggle:hover{background:var(--bg3)}.filters-toggle svg{width:18px;height:18px}
+.filters-toggle.active{color:var(--accent);background:var(--accent-light)}
+.filters{display:flex;gap:8px;flex-wrap:wrap;flex:1;overflow:hidden;transition:all .3s}
+.filters.hidden{max-height:0;opacity:0;margin:0;padding:0;pointer-events:none}
 .filter-chip{padding:7px 14px;border-radius:20px;border:1px solid var(--border);background:var(--card);font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;color:var(--text2);transition:all .2s;white-space:nowrap}
 .filter-chip.active{background:var(--accent);color:#fff;border-color:var(--accent)}
 .modal-overlay{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.5);backdrop-filter:blur(4px);display:none;align-items:flex-end;justify-content:center}
@@ -79,22 +94,29 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-
 .btn-danger{background:var(--danger);color:#fff}.btn-outline{background:transparent;border:2px solid var(--border);color:var(--text)}
 .btn-sm{padding:8px 14px;font-size:13px}.btn:disabled{opacity:.5;cursor:not-allowed}
 .btn-group{display:flex;gap:8px;margin-top:8px}.btn-group .btn{flex:1}
-.photo-capture{width:100%;aspect-ratio:4/3;border-radius:var(--radius);border:2px dashed var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;cursor:pointer;overflow:hidden;position:relative;background:var(--bg3);transition:border-color .2s;margin-bottom:16px}
+.photo-capture{width:100%;aspect-ratio:1/1;border-radius:var(--radius);border:2px dashed var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;cursor:pointer;overflow:hidden;position:relative;background:var(--bg3);transition:border-color .2s;margin-bottom:16px;max-height:280px}
 .photo-capture:hover{border-color:var(--accent)}.photo-capture svg{width:36px;height:36px;color:var(--text2)}
 .photo-capture span{font-size:13px;color:var(--text2);font-weight:600}
 .photo-capture img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .photo-capture .remove-photo{position:absolute;top:8px;right:8px;z-index:2;width:28px;height:28px;border-radius:50%;background:rgba(0,0,0,.6);color:#fff;border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px}
+.photo-capture .retake-photo{position:absolute;bottom:8px;right:8px;z-index:2;padding:6px 12px;border-radius:20px;background:rgba(0,0,0,.6);color:#fff;border:none;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit}
 .upload-progress{position:absolute;bottom:0;left:0;right:0;height:4px;background:var(--bg3)}
 .upload-progress-bar{height:100%;background:var(--accent);transition:width .3s;border-radius:4px}
 .qr-sticker{text-align:center;padding:20px}.qr-sticker canvas{margin:12px auto;display:block}
 .qr-sticker-code{font-size:28px;font-weight:800;margin-top:8px}.qr-sticker-name{font-size:14px;color:var(--text2)}
 .qr-scanner-wrap{width:100%;aspect-ratio:1;border-radius:var(--radius);overflow:hidden;margin-bottom:16px;background:#000}
-.detail-photo{width:100%;aspect-ratio:4/3;border-radius:var(--radius);object-fit:cover;background:var(--bg3);margin-bottom:16px}
-.detail-title{font-size:22px;font-weight:800;margin-bottom:4px}
+.detail-photo{width:100%;aspect-ratio:1/1;border-radius:var(--radius);object-fit:cover;background:var(--bg3);margin-bottom:16px;max-height:320px}
+.detail-title{font-size:22px;font-weight:800;margin-bottom:4px;display:flex;align-items:center;gap:10px}
 .detail-desc{color:var(--text2);font-size:14px;margin-bottom:12px;line-height:1.5}
+.detail-path{font-size:12px;color:var(--text2);margin-bottom:12px;line-height:1.8}
+.detail-path-item{display:block}
 .detail-meta{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
 .detail-meta-row{display:flex;align-items:center;gap:8px;font-size:14px}
 .detail-meta-label{color:var(--text2);font-weight:600;min-width:100px}
+.detail-star-btn,.detail-trash-btn{background:none;border:2px solid var(--border);border-radius:var(--radius-sm);padding:8px 16px;cursor:pointer;font-size:14px;transition:all .2s;display:flex;align-items:center;gap:6px;font-family:inherit;font-weight:700}
+.detail-star-btn.active{border-color:var(--star-color);background:rgba(240,165,0,.1);color:var(--star-color)}
+.detail-trash-btn.active{border-color:var(--trash-color);background:rgba(155,89,182,.1);color:var(--trash-color)}
+.detail-marks{display:flex;gap:8px;margin-bottom:16px}
 .spinner{width:24px;height:24px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;margin:20px auto}
 @keyframes spin{to{transform:rotate(360deg)}}
 .toast-container{position:fixed;top:70px;left:50%;transform:translateX(-50%);z-index:500;display:flex;flex-direction:column;gap:8px}
@@ -116,8 +138,6 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-
 .suggestion-item:last-child{border-bottom:none}.suggestion-item:hover,.suggestion-item.active-sugg{background:var(--accent-light)}
 .inline-container-form{background:var(--bg3);border-radius:var(--radius-sm);padding:12px;margin-top:8px;display:none}
 .inline-container-form.show{display:block}
-
-/* Container picker list */
 .container-picker-list{max-height:200px;overflow-y:auto;border:1px solid var(--border);border-radius:var(--radius-sm);margin-top:8px;background:var(--card)}
 .container-picker-item{display:flex;align-items:center;gap:10px;padding:10px 14px;cursor:pointer;border-bottom:1px solid var(--border);transition:background .15s}
 .container-picker-item:last-child{border-bottom:none}
@@ -131,10 +151,18 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-
 .container-picker-empty{padding:16px;text-align:center;color:var(--text2);font-size:13px}
 .container-picker-search{position:relative;margin-bottom:0}
 .container-picker-search .search-ai-badge{position:absolute;right:12px;top:50%;transform:translateY(-50%)}
-
-/* Parent container picker for container form */
 .parent-container-picker-list{max-height:180px;overflow-y:auto;border:1px solid var(--border);border-radius:var(--radius-sm);margin-top:8px;background:var(--card)}
-
+.no-container-option{display:flex;align-items:center;gap:10px;padding:10px 14px;cursor:pointer;border-bottom:1px solid var(--border);transition:background .15s;font-style:italic;color:var(--text2);border:1px solid var(--border);border-radius:var(--radius-sm);margin-top:8px;background:var(--card)}
+.no-container-option:hover,.no-container-option.selected{background:var(--accent-light)}
+.no-container-option.selected{border-left:3px solid var(--accent);color:var(--accent);font-style:normal}
+.selection-bar{position:fixed;bottom:calc(var(--nav-height) + 8px);left:16px;right:16px;max-width:508px;margin:0 auto;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:12px 16px;display:none;align-items:center;justify-content:space-between;gap:8px;z-index:90;box-shadow:0 4px 20px rgba(0,0,0,.15)}
+.selection-bar.visible{display:flex}
+.selection-bar-count{font-weight:700;font-size:14px}
+.selection-bar-actions{display:flex;gap:8px}
+.detail-nav{display:flex;justify-content:space-between;margin-top:12px}
+.detail-nav-btn{background:none;border:2px solid var(--border);border-radius:var(--radius-sm);padding:10px 20px;cursor:pointer;font-family:inherit;font-weight:700;font-size:14px;color:var(--text2);transition:all .2s}
+.detail-nav-btn:hover{border-color:var(--accent);color:var(--accent)}
+.detail-nav-btn:disabled{opacity:.3;cursor:not-allowed}
 @media print{body *{visibility:hidden!important}.print-area,.print-area *{visibility:visible!important}.print-area{position:fixed!important;inset:0!important;display:flex!important;flex-wrap:wrap!important;align-content:flex-start!important;gap:8mm!important;padding:10mm!important;background:#fff!important}.print-sticker{width:45mm;text-align:center;page-break-inside:avoid;border:1px dashed #ccc;padding:3mm}.print-sticker canvas{width:35mm!important;height:35mm!important}.print-sticker .ps-code{font-size:16pt;font-weight:800;font-family:'Nunito',sans-serif}.print-sticker .ps-name{font-size:8pt;font-family:'Nunito',sans-serif}}
 @media(min-width:600px){.main{max-width:540px;margin:0 auto}.modal{border-radius:24px;margin-bottom:20px}}
 </style>
@@ -149,17 +177,22 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-
   <div class="topbar">
     <div class="topbar-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>Інвентар</div>
     <div class="topbar-actions">
+      <button class="topbar-btn" id="selectionModeBtn" onclick="toggleSelectionMode()" title="Режим виділення"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></button>
       <button class="topbar-btn" onclick="openSettings()" title="Налаштування"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg></button>
       <button class="topbar-btn" onclick="toggleTheme()" title="Тема"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg></button>
+      <button class="topbar-btn" onclick="exportAll()" title="Експорт"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg></button>
       <button class="topbar-btn" onclick="signOut()" title="Вийти"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg></button>
     </div>
   </div>
   <div class="main">
-    <div id="pageSearch" class="page active">
+    <div id="pageItems" class="page active">
       <div class="search-wrap"><svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg><input type="text" class="search-input" id="searchInput" placeholder="Шукати речі..." oninput="debounceSearch()"><span class="search-ai-badge" id="searchBadge" style="display:none">AI</span></div>
-      <div id="searchResults" class="search-results"><div class="search-hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg><p>Введіть запит для пошуку</p></div></div>
+      <div class="filters-row" id="filtersRow">
+        <button class="filters-toggle" id="filtersToggle" onclick="toggleFiltersVisibility()" title="Фільтри"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg></button>
+        <div class="filters" id="itemFilters"></div>
+      </div>
+      <div id="itemsList" class="search-results"></div>
     </div>
-    <div id="pageItems" class="page"><div class="section-title">Усі речі</div><div class="filters" id="itemFilters"></div><div id="itemsList" class="search-results"></div></div>
     <div id="pageContainers" class="page"><div class="section-title">Контейнери</div><div id="containersList" style="display:flex;flex-direction:column;gap:10px"></div></div>
     <div id="pageExport" class="page">
       <div class="section-title">Експорт / Імпорт</div>
@@ -178,12 +211,18 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-
       </div>
     </div>
   </div>
+  <div class="selection-bar" id="selectionBar">
+    <span class="selection-bar-count" id="selectionBarCount">0 обрано</span>
+    <div class="selection-bar-actions">
+      <button class="btn btn-sm btn-primary" onclick="assignSelectionContainer()">📦 Назначити</button>
+      <button class="btn btn-sm btn-outline" onclick="clearSelection()">✕</button>
+    </div>
+  </div>
   <nav class="bottom-nav">
-    <button class="nav-item active" onclick="showPage('pageSearch',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg><span>Пошук</span></button>
-    <button class="nav-item" onclick="showPage('pageItems',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg><span>Речі</span></button>
+    <button class="nav-item active" onclick="showPage('pageItems',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg><span>Речі</span></button>
     <button class="nav-item add-btn" onclick="openAddModal()"><div class="add-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div><span>Додати</span></button>
     <button class="nav-item" onclick="showPage('pageContainers',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="18" rx="2"/><path d="M2 9h20M10 3v18"/></svg><span>Контейнери</span></button>
-    <button class="nav-item" onclick="showPage('pageExport',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg><span>Експорт</span></button>
+    <button class="nav-item" onclick="showPage('pageExport',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span>Експорт</span></button>
   </nav>
 </div>
 
@@ -196,6 +235,8 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-
     <div class="btn-group"><button class="btn btn-primary" onclick="showAddItem()">📦 Річ</button><button class="btn btn-outline" onclick="showAddContainer()">🏷️ Контейнер</button></div>
   </div>
   <div id="addItemForm" style="display:none">
+    <div class="photo-capture" id="itemPhotoCap" onclick="capturePhoto('itemPhotoInput')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg><span>Фото речі</span></div>
+    <input type="file" id="itemPhotoInput" accept="image/*" capture="environment" style="display:none" onchange="handlePhoto(event,'itemPhotoCap')">
     <div class="form-group"><label class="form-label">Назва</label><input type="text" class="form-input" id="itemName" placeholder="Необов'язково"></div>
     <div class="form-group">
       <label class="form-label">Контейнер</label>
@@ -204,6 +245,7 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-
         <input type="text" class="form-input" id="itemContainerInput" placeholder="Пошук контейнера..." oninput="filterContainerPicker()" onfocus="showContainerPicker()">
         <span class="search-ai-badge" id="containerSearchBadge" style="display:none;font-size:9px">AI</span>
       </div>
+      <div class="no-container-option" id="noContainerOption" onclick="selectNoContainer()">📭 Без контейнера</div>
       <div class="container-picker-list" id="containerPickerList"></div>
       <div class="inline-container-form" id="inlineContForm">
         <p style="font-weight:700;font-size:14px;margin-bottom:8px">Новий контейнер</p>
@@ -217,16 +259,14 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-
     <button class="btn btn-outline" style="width:100%;margin-top:8px" onclick="closeModal('addModal')">Скасувати</button>
   </div>
   <div id="addContainerForm" style="display:none">
-    <div class="photo-capture" id="contPhotoCap" onclick="capturePhoto('contPhotoInput')" style="aspect-ratio:3/2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg><span>Фото контейнера</span></div>
+    <div class="photo-capture" id="contPhotoCap" onclick="capturePhoto('contPhotoInput')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg><span>Фото контейнера</span></div>
     <input type="file" id="contPhotoInput" accept="image/*" capture="environment" style="display:none" onchange="handlePhoto(event,'contPhotoCap')">
     <div class="form-group"><label class="form-label">Код</label><input type="text" class="form-input" id="containerCode" readonly style="font-weight:800;font-size:20px;text-align:center;letter-spacing:4px"></div>
     <div class="form-group" style="position:relative"><label class="form-label">Назва</label><input type="text" class="form-input" id="containerName" placeholder="Підвал полиця 1" oninput="showNameSugg(this,'contNameSugg')"><div class="suggestions" id="contNameSugg"></div></div>
     <div class="form-group"><label class="form-label">Опис</label><textarea class="form-textarea" id="containerDesc" placeholder="Необов'язково"></textarea></div>
     <div class="form-group">
       <label class="form-label">Батьківський контейнер</label>
-      <div style="position:relative">
-        <input type="text" class="form-input" id="parentContainerSearch" placeholder="Пошук батьківського..." oninput="filterParentContainerPicker()" onfocus="showParentContainerPicker()">
-      </div>
+      <div style="position:relative"><input type="text" class="form-input" id="parentContainerSearch" placeholder="Пошук батьківського..." oninput="filterParentContainerPicker()" onfocus="showParentContainerPicker()"></div>
       <div class="parent-container-picker-list" id="parentContainerPickerList"></div>
       <input type="hidden" id="containerParent" value="">
     </div>
@@ -243,6 +283,12 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-
   <button class="btn btn-primary" onclick="saveApiKey()">Зберегти</button>
   <button class="btn btn-outline" style="width:100%;margin-top:8px" onclick="closeModal('settingsModal')">Закрити</button>
 </div></div>
+<div class="modal-overlay" id="assignModal"><div class="modal"><div class="modal-handle"></div><div class="modal-title" id="assignModalTitle">Назначити контейнер</div>
+  <div class="container-picker-search" style="position:relative;margin-bottom:8px"><input type="text" class="form-input" id="assignContainerInput" placeholder="Пошук контейнера..." oninput="filterAssignPicker()"></div>
+  <div class="no-container-option" id="assignNoContainer" onclick="assignToNoContainer()" style="margin-bottom:8px">📭 Без контейнера</div>
+  <div class="container-picker-list" id="assignPickerList" style="max-height:300px"></div>
+  <button class="btn btn-outline" style="width:100%;margin-top:12px" onclick="closeModal('assignModal')">Скасувати</button>
+</div></div>
 <div class="print-area" id="printArea"></div>
 <div class="toast-container" id="toastContainer"></div>
 
@@ -257,9 +303,13 @@ const firebaseConfig={apiKey:"AIzaSyBX2UUSpFM6YWbY4cBH-q0lkfa8yB4tGao",authDomai
 let ANTHROPIC_API_KEY=localStorage.getItem('anthropic_api_key')||'';
 firebase.initializeApp(firebaseConfig);
 const auth=firebase.auth(),db=firebase.firestore(),storage=firebase.storage();
-let currentUser=null,allItems=[],allContainers=[],capturedPhotoBlob=null,capturedContPhotoBlob=null,currentFilter='all',searchTimeout=null,qrScanner=null,editingItemId=null,editingContId=null;
-let selectedContainerCode=''; // tracks selected container in picker
-let selectedParentContainerCode=''; // tracks selected parent container
+let currentUser=null,allItems=[],allContainers=[],capturedPhotoBlob=null,capturedContPhotoBlob=null,currentFilter=null,searchTimeout=null,qrScanner=null,editingItemId=null,editingContId=null;
+let selectedContainerCode='',selectedParentContainerCode='';
+let filtersVisible=true,selectionMode=false;
+let selectedItemIds=new Set(),selectedContainerIds=new Set();
+let currentSelectionContext='items';
+let currentDetailItems=[],currentDetailIndex=-1;
+let isSearchActive=false,collapsedContainers=new Set(),noContainerSelected=false;
 
 auth.onAuthStateChanged(u=>{currentUser=u;if(u){document.getElementById('authScreen').style.display='none';document.getElementById('app').style.display='block';loadData()}else{document.getElementById('authScreen').style.display='flex';document.getElementById('app').style.display='none'}});
 function signIn(){auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()).catch(()=>showToast('Помилка входу','error'))}
@@ -267,398 +317,128 @@ function signOut(){if(confirm('Вийти?'))auth.signOut()}
 function toggleTheme(){const d=document.documentElement.getAttribute('data-theme')==='dark';document.documentElement.setAttribute('data-theme',d?'':'dark');localStorage.setItem('theme',d?'light':'dark')}
 (function(){const t=localStorage.getItem('theme');if(t==='dark'||(!t&&matchMedia('(prefers-color-scheme:dark)').matches))document.documentElement.setAttribute('data-theme','dark')})();
 
-function showPage(id,el){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));if(el)el.classList.add('active');if(id==='pageItems')renderItems();if(id==='pageContainers')renderContainers();if(id==='pageExport')renderStickerGrid()}
+function showPage(id,el){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));if(el)el.classList.add('active');if(id==='pageItems')renderItems();if(id==='pageContainers')renderContainers();if(id==='pageExport')renderStickerGrid();
+  // update selection context
+  if(selectionMode){currentSelectionContext=id==='pageContainers'?'containers':'items';updateSelectionBar()}}
 
-async function loadData(){try{const[iS,cS]=await Promise.all([db.collection('items').orderBy('createdAt','desc').get(),db.collection('containers').orderBy('createdAt','desc').get()]);allItems=iS.docs.map(d=>({id:d.id,...d.data()}));allContainers=cS.docs.map(d=>({id:d.id,...d.data()}))}catch(e){showToast('Помилка завантаження','error')}}
+async function loadData(){try{const[iS,cS]=await Promise.all([db.collection('items').orderBy('createdAt','desc').get(),db.collection('containers').orderBy('createdAt','desc').get()]);allItems=iS.docs.map(d=>({id:d.id,...d.data()}));allContainers=cS.docs.map(d=>({id:d.id,...d.data()}));renderItems()}catch(e){showToast('Помилка завантаження','error')}}
 
-function debounceSearch(){clearTimeout(searchTimeout);searchTimeout=setTimeout(()=>performSearch(),500)}
-async function performSearch(){const q=document.getElementById('searchInput').value.trim(),badge=document.getElementById('searchBadge'),res=document.getElementById('searchResults');if(!q){badge.style.display='none';res.innerHTML='<div class="search-hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg><p>Введіть запит</p></div>';return}res.innerHTML='<div class="spinner"></div>';try{const f=await aiSearch(q,allItems);badge.style.display='inline-block';badge.className='search-ai-badge ai';badge.textContent='✨ AI';renderSearchResults(f,res)}catch(e){const f=fallbackSearch(q,allItems);badge.style.display='inline-block';badge.className='search-ai-badge text';badge.textContent='Текст';renderSearchResults(f,res)}}
+function debounceSearch(){clearTimeout(searchTimeout);searchTimeout=setTimeout(()=>performSearch(),400)}
+async function performSearch(){const q=document.getElementById('searchInput').value.trim();const badge=document.getElementById('searchBadge');if(!q){badge.style.display='none';isSearchActive=false;renderItems();return}
+isSearchActive=true;document.getElementById('itemFilters').classList.add('hidden');document.getElementById('itemsList').innerHTML='<div class="spinner"></div>';
+try{const f=await aiSearch(q,allItems);badge.style.display='inline-block';badge.className='search-ai-badge ai';badge.textContent='✨ AI';currentDetailItems=f;renderFoundItems(f)}catch(e){const f=fallbackSearch(q,allItems);badge.style.display='inline-block';badge.className='search-ai-badge text';badge.textContent='Текст';currentDetailItems=f;renderFoundItems(f)}}
 
 async function aiSearch(q,items){if(!ANTHROPIC_API_KEY)throw 1;if(!items.length)return[];const l=items.map(i=>i.id+'|'+(i.name||'?')+'|'+(i.containerId||'')).join('\n');const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':ANTHROPIC_API_KEY,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:200,messages:[{role:'user',content:'Пошук:"'+q+'"\nid|назва|контейнер:\n'+l+'\nJSON масив id:'}]})});if(!r.ok)throw 1;const d=await r.json(),m=d.content[0].text.match(/\[.*\]/s);return m?items.filter(i=>JSON.parse(m[0]).includes(i.id)):[]}
-
 function fallbackSearch(q,items){const w=q.toLowerCase().split(/\s+/);return items.filter(i=>{const t=((i.name||'')+(i.description||'')+(i.containerId||'')).toLowerCase();return w.every(x=>t.includes(x))})}
-function renderSearchResults(items,el){el.innerHTML=items.length?items.map(i=>itemCardHTML(i)).join(''):'<div class="empty-state"><p>Нічого не знайдено</p></div>'}
+function renderFoundItems(items){document.getElementById('itemsList').innerHTML=items.length?items.map(i=>itemCardHTML(i)).join(''):'<div class="empty-state"><p>Нічого не знайдено</p></div>'}
 
-function itemCardHTML(item){const c=allContainers.find(x=>x.code===item.containerId),path=c?getContainerPath(c):'',ph=item.photoURL?'<img class="item-card-photo" src="'+item.photoURL+'">':'<div class="item-card-photo placeholder">📦</div>';return'<div class="item-card" onclick="showItemDetail(\''+item.id+'\')">'+ph+'<div class="item-card-info"><div class="item-card-name">'+esc(item.name||'Без назви')+'</div><div class="item-card-desc">'+esc(item.description||'Без опису')+'</div>'+(item.containerId?'<div class="item-card-container">📍 '+esc(item.containerId)+(path?' · '+esc(path):'')+'</div>':'')+'</div></div>'}
+function itemCardHTML(item){const c=allContainers.find(x=>x.code===item.containerId);const ph=item.photoURL?'<img class="item-card-photo" src="'+item.photoURL+'">':'<div class="item-card-photo placeholder">📦</div>';const starBadge=item.starred?'<span class="badge-star active">⭐</span>':'';const trashBadge=item.markedTrash?'<span class="badge-trash active">🗑️</span>':'';const isSelected=selectionMode&&selectedItemIds.has(item.id);const selBox=selectionMode?'<div class="selection-checkbox'+(isSelected?' checked':'')+'">✓</div>':'';
+return '<div class="item-card'+(isSelected?' selected-card':'')+'" onclick="'+(selectionMode?'toggleItemSelection(\''+item.id+'\')':'showItemDetail(\''+item.id+'\')')+'">'+selBox+ph+'<div class="item-card-info"><div class="item-card-name">'+esc(item.name||'Без назви')+starBadge+trashBadge+'</div><div class="item-card-desc">'+esc(item.description||'Без опису')+'</div>'+(item.containerId?'<div class="item-card-container">📍 '+esc(item.containerId)+(c?' — '+esc(c.name):'')+'</div>':'<div class="item-card-container" style="color:var(--text2)">📭 Без контейнера</div>')+'</div></div>'}
 
-// Path now includes container code in parentheses
-function getContainerPath(c){
-  let parts=[];
-  let cur=c;
-  while(cur){
-    parts.unshift(cur.name+' ('+cur.code+')');
-    cur=cur.parentContainerId?allContainers.find(x=>x.id===cur.parentContainerId):null;
-  }
-  return parts.join(' → ');
-}
+function getContainerPath(c){let parts=[];let cur=c;while(cur){parts.unshift(cur.name+' («'+cur.code+'»)');cur=cur.parentContainerId?allContainers.find(x=>x.id===cur.parentContainerId):null}return parts.join(' → ')}
+function getContainerPathVertical(c){let parts=[];let cur=c;while(cur){parts.unshift({code:cur.code,name:cur.name});cur=cur.parentContainerId?allContainers.find(x=>x.id===cur.parentContainerId):null}return parts}
 
-function renderItems(){const fd=document.getElementById('itemFilters'),opts=[{code:'all',name:'Усі'},{code:'nodesc',name:'⚠️ Без опису'},...allContainers];fd.innerHTML=opts.map(c=>'<button class="filter-chip '+(currentFilter===(c.code||'all')?'active':'')+'" onclick="setFilter(\''+(c.code||'all')+'\')">'+(c.code==='all'?'Усі':c.code==='nodesc'?'⚠️ Без опису':esc(c.code))+'</button>').join('');let f=allItems;if(currentFilter==='nodesc')f=allItems.filter(i=>!i.described);else if(currentFilter!=='all')f=allItems.filter(i=>i.containerId===currentFilter);document.getElementById('itemsList').innerHTML=f.length?f.map(i=>itemCardHTML(i)).join(''):'<div class="empty-state"><p>Речей немає</p></div>'}
-function setFilter(c){currentFilter=c;renderItems()}
+function toggleFiltersVisibility(){filtersVisible=!filtersVisible;const f=document.getElementById('itemFilters');const btn=document.getElementById('filtersToggle');if(filtersVisible){f.classList.remove('hidden');btn.classList.remove('active')}else{f.classList.add('hidden');btn.classList.add('active')}}
 
-function renderContainers(){const l=document.getElementById('containersList');if(!allContainers.length){l.innerHTML='<div class="empty-state"><p>Контейнерів немає</p></div>';return}l.innerHTML=allContainers.filter(c=>!c.parentContainerId).map(c=>containerTreeHTML(c)).join('')}
-function containerTreeHTML(c){const ch=allContainers.filter(x=>x.parentContainerId===c.id),cnt=allItems.filter(i=>i.containerId===c.code).length,ph=c.photoURL?'<img class="container-photo" src="'+c.photoURL+'">':'<div class="container-code">'+esc(c.code)+'</div>';return'<div><div class="container-card" onclick="showContainerDetail(\''+c.id+'\')">'+ph+'<div class="container-info"><div class="container-name">'+esc(c.code)+' — '+esc(c.name)+'</div>'+(c.description?'<div class="container-desc">'+esc(c.description)+'</div>':'')+'<div class="container-count">'+cnt+' '+(cnt===1?'річ':cnt<5?'речі':'речей')+'</div></div></div>'+(ch.length?'<div class="container-children">'+ch.map(x=>containerTreeHTML(x)).join('')+'</div>':'')+'</div>'}
+function renderItems(){if(isSearchActive)return;
+const fd=document.getElementById('itemFilters');const opts=[{code:'nodesc',name:'⚠️ Без опису'},{code:'noname',name:'❓ Без назви'},{code:'starred',name:'⭐ Зірочка'},{code:'trash',name:'🗑️ На викид'},{code:'nocontainer',name:'📭 Без контейнера'}];
+fd.innerHTML=opts.map(c=>'<button class="filter-chip '+(currentFilter===c.code?'active':'')+'" onclick="setFilter(\''+c.code+'\')">'+c.name+'</button>').join('');
+if(filtersVisible)document.getElementById('itemFilters').classList.remove('hidden');
+let f=[];if(currentFilter==='nodesc')f=allItems.filter(i=>!i.described);else if(currentFilter==='noname')f=allItems.filter(i=>!i.name||!i.name.trim());else if(currentFilter==='starred'){f=allItems.filter(i=>i.starred);f.sort((a,b)=>(b.starredAt||0)-(a.starredAt||0))}else if(currentFilter==='trash'){f=allItems.filter(i=>i.markedTrash);f.sort((a,b)=>(b.markedTrashAt||0)-(a.markedTrashAt||0))}else if(currentFilter==='nocontainer')f=allItems.filter(i=>!i.containerId);else f=[];
+currentDetailItems=f;const el=document.getElementById('itemsList');
+if(!currentFilter){el.innerHTML='<div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg><p>Оберіть фільтр або скористайтесь пошуком</p></div>'}else{el.innerHTML=f.length?f.map(i=>itemCardHTML(i)).join(''):'<div class="empty-state"><p>Речей немає</p></div>'}}
+function setFilter(c){if(currentFilter===c)currentFilter=null;else currentFilter=c;isSearchActive=false;document.getElementById('searchInput').value='';document.getElementById('searchBadge').style.display='none';renderItems()}
 
-function openAddModal(){
-  capturedPhotoBlob=null;capturedContPhotoBlob=null;editingItemId=null;editingContId=null;
-  selectedContainerCode='';selectedParentContainerCode='';
-  resetPC('addPhotoCap');resetPC('contPhotoCap');
-  document.getElementById('addStep1').style.display='block';
-  document.getElementById('addItemForm').style.display='none';
-  document.getElementById('addContainerForm').style.display='none';
-  document.getElementById('addModalTitle').textContent='Додати';
-  document.getElementById('inlineContForm').classList.remove('show');
-  openModal('addModal');
-}
-function resetPC(id){const c=document.getElementById(id);c.querySelector('img')?.remove();c.querySelector('.remove-photo')?.remove();c.querySelector('.upload-progress')?.remove()}
+function renderContainers(){const l=document.getElementById('containersList');const sorted=[...allContainers].sort((a,b)=>{const aT=a.lastUsedAt?.seconds||a.createdAt?.seconds||0;const bT=b.lastUsedAt?.seconds||b.createdAt?.seconds||0;return bT-aT});const roots=sorted.filter(c=>!c.parentContainerId);if(!roots.length){l.innerHTML='<div class="empty-state"><p>Контейнерів немає</p></div>';return}l.innerHTML=roots.map(c=>containerTreeHTML(c)).join('')}
+function containerTreeHTML(c){const ch=allContainers.filter(x=>x.parentContainerId===c.id);const cnt=allItems.filter(i=>i.containerId===c.code).length;const ph=c.photoURL?'<img class="container-photo" src="'+c.photoURL+'">':'<div class="container-code">'+esc(c.code)+'</div>';const isCollapsed=collapsedContainers.has(c.id);const isSelected=selectionMode&&selectedContainerIds.has(c.id);const selBox=selectionMode?'<div class="selection-checkbox'+(isSelected?' checked':'')+'">✓</div>':'';
+let html='<div><div class="container-card'+(isSelected?' selected-card':'')+'" onclick="'+(selectionMode?'toggleContainerSelection(\''+c.id+'\')':'showContainerDetail(\''+c.id+'\')')+'">'+selBox+ph+'<div class="container-info"><div class="container-name">'+esc(c.code)+' — '+esc(c.name)+'</div>'+(c.description?'<div class="container-desc">'+esc(c.description)+'</div>':'')+'<div class="container-count">'+cnt+' '+(cnt===1?'річ':cnt<5&&cnt>1?'речі':'речей')+'</div></div></div>';
+if(ch.length){html+='<button class="collapse-toggle'+(isCollapsed?' collapsed':'')+'" onclick="event.stopPropagation();toggleCollapse(\''+c.id+'\',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>'+(isCollapsed?'Показати ('+ch.length+')':'Сховати')+'</button>';html+='<div class="container-children'+(isCollapsed?' collapsed':'')+'" id="children_'+c.id+'">'+ch.map(x=>containerTreeHTML(x)).join('')+'</div>'}html+='</div>';return html}
+function toggleCollapse(id,btn){const children=document.getElementById('children_'+id);if(collapsedContainers.has(id)){collapsedContainers.delete(id);children.classList.remove('collapsed');btn.classList.remove('collapsed');const count=allContainers.filter(x=>x.parentContainerId===id).length;btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>Сховати'}else{collapsedContainers.add(id);children.classList.add('collapsed');btn.classList.add('collapsed');const count=allContainers.filter(x=>x.parentContainerId===id).length;btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>Показати ('+count+')'}}
 
-function showAddItem(){
-  document.getElementById('addStep1').style.display='none';
-  document.getElementById('addItemForm').style.display='block';
-  document.getElementById('addModalTitle').textContent='Нова річ';
-  document.getElementById('itemName').value='';
-  document.getElementById('itemDesc').value='';
-  document.getElementById('itemContainerInput').value='';
-  selectedContainerCode='';
-  document.getElementById('inlineContForm').classList.remove('show');
-  document.getElementById('saveItemBtn').textContent='Зберегти річ';
-  document.getElementById('saveItemBtn').onclick=()=>saveItem();
-  // Transfer photo from step1 to item
-  transferPhotoToItem();
-  // Show container picker immediately sorted by last used
-  renderContainerPicker('');
-}
+// Selection mode
+function toggleSelectionMode(){selectionMode=!selectionMode;selectedItemIds.clear();selectedContainerIds.clear();const btn=document.getElementById('selectionModeBtn');if(selectionMode){btn.classList.add('active-mode');currentSelectionContext=document.getElementById('pageContainers').classList.contains('active')?'containers':'items'}else{btn.classList.remove('active-mode')}updateSelectionBar();if(document.getElementById('pageItems').classList.contains('active'))renderItems();if(document.getElementById('pageContainers').classList.contains('active'))renderContainers()}
+function toggleItemSelection(id){if(selectedItemIds.has(id))selectedItemIds.delete(id);else selectedItemIds.add(id);currentSelectionContext='items';updateSelectionBar();renderItems()}
+function toggleContainerSelection(id){if(selectedContainerIds.has(id))selectedContainerIds.delete(id);else selectedContainerIds.add(id);currentSelectionContext='containers';updateSelectionBar();renderContainers()}
+function updateSelectionBar(){const count=currentSelectionContext==='items'?selectedItemIds.size:selectedContainerIds.size;document.getElementById('selectionBarCount').textContent=count+' обрано';document.getElementById('selectionBar').classList.toggle('visible',selectionMode)}
+function clearSelection(){selectedItemIds.clear();selectedContainerIds.clear();updateSelectionBar();if(document.getElementById('pageItems').classList.contains('active'))renderItems();if(document.getElementById('pageContainers').classList.contains('active'))renderContainers()}
+function assignSelectionContainer(){if(currentSelectionContext==='items'&&!selectedItemIds.size){showToast('Оберіть речі','error');return}if(currentSelectionContext==='containers'&&!selectedContainerIds.size){showToast('Оберіть контейнери','error');return}document.getElementById('assignModalTitle').textContent=currentSelectionContext==='items'?'Назначити контейнер':'Назначити батьківський';document.getElementById('assignContainerInput').value='';document.getElementById('assignNoContainer').style.display=currentSelectionContext==='items'?'flex':'none';renderAssignPicker('');openModal('assignModal')}
+function filterAssignPicker(){renderAssignPicker(document.getElementById('assignContainerInput').value.trim())}
+function renderAssignPicker(query){let containers=getContainersSortedByLastUsed();if(currentSelectionContext==='containers')containers=containers.filter(c=>!selectedContainerIds.has(c.id));if(query){const q=query.toLowerCase();containers=containers.filter(c=>c.code.toLowerCase().includes(q)||c.name.toLowerCase().includes(q))}const list=document.getElementById('assignPickerList');list.innerHTML=containers.map(c=>{const ph=c.photoURL?'<img class="container-picker-photo" src="'+c.photoURL+'">':'<div class="container-picker-code">'+esc(c.code)+'</div>';return '<div class="container-picker-item" onclick="doAssign(\''+c.code+'\',\''+c.id+'\')">'+ph+'<div class="container-picker-info"><div class="container-picker-name">'+esc(c.code)+' — '+esc(c.name)+'</div></div></div>'}).join('')||'<div class="container-picker-empty">Немає</div>'}
+function assignToNoContainer(){if(currentSelectionContext!=='items')return;doAssignItems('');closeModal('assignModal')}
+async function doAssign(code,containerId){closeModal('assignModal');if(currentSelectionContext==='items'){await doAssignItems(code)}else{for(const id of selectedContainerIds){const cont=allContainers.find(c=>c.id===id);if(cont){await db.collection('containers').doc(id).update({parentContainerId:containerId});cont.parentContainerId=containerId}}showToast('Батьківський назначено','success');selectedContainerIds.clear();updateSelectionBar();renderContainers()}}
+async function doAssignItems(code){for(const id of selectedItemIds){const item=allItems.find(i=>i.id===id);if(item){await db.collection('items').doc(id).update({containerId:code});item.containerId=code}}if(code)await updateContainerLastUsed(code);showToast('Контейнер назначено','success');selectedItemIds.clear();updateSelectionBar();renderItems()}
 
-function showAddContainer(){
-  document.getElementById('addStep1').style.display='none';
-  document.getElementById('addContainerForm').style.display='block';
-  document.getElementById('addModalTitle').textContent='Новий контейнер';
-  document.getElementById('containerCode').value=getNextCode();
-  document.getElementById('containerName').value='';
-  document.getElementById('containerDesc').value='';
-  document.getElementById('parentContainerSearch').value='';
-  document.getElementById('containerParent').value='';
-  selectedParentContainerCode='';
-  document.getElementById('saveContBtn').textContent='Зберегти';
-  document.getElementById('saveContBtn').onclick=()=>saveContainer();
-  // Transfer photo from step1 to container
-  transferPhotoToContainer();
-  // Show parent picker
-  renderParentContainerPicker('');
-}
+// Add modal
+function openAddModal(){capturedPhotoBlob=null;capturedContPhotoBlob=null;editingItemId=null;editingContId=null;selectedContainerCode='';selectedParentContainerCode='';noContainerSelected=false;resetPC('addPhotoCap');resetPC('contPhotoCap');resetPC('itemPhotoCap');document.getElementById('addStep1').style.display='block';document.getElementById('addItemForm').style.display='none';document.getElementById('addContainerForm').style.display='none';document.getElementById('addModalTitle').textContent='Додати';document.getElementById('inlineContForm').classList.remove('show');updateNoContainerOption();openModal('addModal')}
+function resetPC(id){const c=document.getElementById(id);if(!c)return;c.querySelector('img')?.remove();c.querySelector('.remove-photo')?.remove();c.querySelector('.retake-photo')?.remove();c.querySelector('.upload-progress')?.remove()}
 
-// Transfer captured photo from step1 to item photo
-function transferPhotoToItem(){
-  if(capturedPhotoBlob){
-    // Photo was captured in step1, keep it as capturedPhotoBlob for item
-    // capturedContPhotoBlob stays null
-    capturedContPhotoBlob=null;
-  }
-}
-function transferPhotoToContainer(){
-  if(capturedPhotoBlob){
-    // Move photo from generic to container
-    capturedContPhotoBlob=capturedPhotoBlob;
-    capturedPhotoBlob=null;
-    // Show the photo in container capture area
-    const cap=document.getElementById('contPhotoCap');
-    cap.querySelector('img')?.remove();
-    cap.querySelector('.remove-photo')?.remove();
-    const img=document.createElement('img');
-    img.src=URL.createObjectURL(capturedContPhotoBlob);
-    cap.appendChild(img);
-    const btn=document.createElement('button');
-    btn.className='remove-photo';btn.innerHTML='✕';
-    btn.onclick=ev=>{ev.stopPropagation();capturedContPhotoBlob=null;img.remove();btn.remove()};
-    cap.appendChild(btn);
-  }
-}
+function showAddItem(){document.getElementById('addStep1').style.display='none';document.getElementById('addItemForm').style.display='block';document.getElementById('addModalTitle').textContent='Нова річ';document.getElementById('itemName').value='';document.getElementById('itemDesc').value='';document.getElementById('itemContainerInput').value='';selectedContainerCode='';noContainerSelected=false;document.getElementById('inlineContForm').classList.remove('show');document.getElementById('saveItemBtn').textContent='Зберегти річ';document.getElementById('saveItemBtn').onclick=()=>saveItem();transferPhotoToItem();renderContainerPicker('');updateNoContainerOption()}
+function showAddContainer(){document.getElementById('addStep1').style.display='none';document.getElementById('addContainerForm').style.display='block';document.getElementById('addModalTitle').textContent='Новий контейнер';document.getElementById('containerCode').value=getNextCode();document.getElementById('containerName').value='';document.getElementById('containerDesc').value='';document.getElementById('parentContainerSearch').value='';document.getElementById('containerParent').value='';selectedParentContainerCode='';document.getElementById('saveContBtn').textContent='Зберегти';document.getElementById('saveContBtn').onclick=()=>saveContainer();transferPhotoToContainer();renderParentContainerPicker('')}
 
-// Container picker: sorted by lastUsedAt (most recent first)
-function getContainersSortedByLastUsed(){
-  return [...allContainers].sort((a,b)=>{
-    const aTime=a.lastUsedAt?.seconds||a.createdAt?.seconds||0;
-    const bTime=b.lastUsedAt?.seconds||b.createdAt?.seconds||0;
-    return bTime-aTime;
-  });
-}
+function transferPhotoToItem(){if(capturedPhotoBlob){capturedContPhotoBlob=null;const cap=document.getElementById('itemPhotoCap');cap.querySelector('img')?.remove();cap.querySelector('.remove-photo')?.remove();cap.querySelector('.retake-photo')?.remove();const img=document.createElement('img');img.src=URL.createObjectURL(capturedPhotoBlob);cap.appendChild(img);addPhotoButtons(cap,'itemPhotoInput',false)}}
+function transferPhotoToContainer(){if(capturedPhotoBlob){capturedContPhotoBlob=capturedPhotoBlob;capturedPhotoBlob=null;const cap=document.getElementById('contPhotoCap');cap.querySelector('img')?.remove();cap.querySelector('.remove-photo')?.remove();cap.querySelector('.retake-photo')?.remove();const img=document.createElement('img');img.src=URL.createObjectURL(capturedContPhotoBlob);cap.appendChild(img);addPhotoButtons(cap,'contPhotoInput',true)}}
+
+function addPhotoButtons(cap,inputId,isContainer){const btn=document.createElement('button');btn.className='remove-photo';btn.innerHTML='✕';btn.onclick=ev=>{ev.stopPropagation();if(isContainer)capturedContPhotoBlob=null;else capturedPhotoBlob=null;cap.querySelector('img')?.remove();btn.remove();cap.querySelector('.retake-photo')?.remove()};cap.appendChild(btn);const retake=document.createElement('button');retake.className='retake-photo';retake.textContent='📷 Перефоткати';retake.onclick=ev=>{ev.stopPropagation();document.getElementById(inputId).click()};cap.appendChild(retake)}
+
+function getContainersSortedByLastUsed(){return[...allContainers].sort((a,b)=>{const aTime=a.lastUsedAt?.seconds||a.createdAt?.seconds||0;const bTime=b.lastUsedAt?.seconds||b.createdAt?.seconds||0;return bTime-aTime})}
 
 let containerSearchTimeout=null;
-function filterContainerPicker(){
-  clearTimeout(containerSearchTimeout);
-  const v=document.getElementById('itemContainerInput').value.trim();
-  renderContainerPicker(v);
-  // AI search with debounce
-  if(v.length>=2 && ANTHROPIC_API_KEY){
-    containerSearchTimeout=setTimeout(()=>aiContainerSearch(v),600);
-  }
-}
+function filterContainerPicker(){clearTimeout(containerSearchTimeout);const v=document.getElementById('itemContainerInput').value.trim();noContainerSelected=false;updateNoContainerOption();renderContainerPicker(v);if(v.length>=2&&ANTHROPIC_API_KEY){containerSearchTimeout=setTimeout(()=>aiContainerSearch(v),600)}}
+function showContainerPicker(){renderContainerPicker(document.getElementById('itemContainerInput').value.trim())}
+async function aiContainerSearch(q){if(!ANTHROPIC_API_KEY||!allContainers.length)return;const badge=document.getElementById('containerSearchBadge');try{const l=allContainers.map(c=>c.code+'|'+c.name).join('\n');const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':ANTHROPIC_API_KEY,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:200,messages:[{role:'user',content:'Пошук контейнера:"'+q+'"\nкод|назва:\n'+l+'\nJSON масив кодів найбільш релевантних:'}]})});if(!r.ok)throw 1;const d=await r.json(),m=d.content[0].text.match(/\[.*\]/s);if(m){const codes=JSON.parse(m[0]);const sorted=codes.map(code=>allContainers.find(c=>c.code===code)).filter(Boolean);const remaining=allContainers.filter(c=>!codes.includes(c.code)&&(c.code.toLowerCase().includes(q.toLowerCase())||c.name.toLowerCase().includes(q.toLowerCase())));renderContainerPickerList([...sorted,...remaining],'containerPickerList');badge.style.display='inline-block';badge.className='search-ai-badge ai';badge.textContent='✨ AI'}}catch(e){badge.style.display='none'}}
+function renderContainerPicker(query){document.getElementById('containerSearchBadge').style.display='none';let containers=getContainersSortedByLastUsed();if(query){const q=query.toLowerCase();containers=containers.filter(c=>c.code.toLowerCase().includes(q)||c.name.toLowerCase().includes(q))}renderContainerPickerList(containers,'containerPickerList')}
+function renderContainerPickerList(containers,listId){const list=document.getElementById(listId);if(!containers.length){list.innerHTML='<div class="container-picker-empty">Немає контейнерів</div>';return}list.innerHTML=containers.map(c=>{const path=getContainerPath(c);const isSelected=(listId==='containerPickerList'?selectedContainerCode:selectedParentContainerCode)===c.code;const ph=c.photoURL?'<img class="container-picker-photo" src="'+c.photoURL+'">':'<div class="container-picker-code">'+esc(c.code)+'</div>';return '<div class="container-picker-item'+(isSelected?' selected':'')+'" onclick="selectContainerFromPicker(\''+c.code+'\',\''+listId+'\')">'+ph+'<div class="container-picker-info"><div class="container-picker-name">'+esc(c.code)+' — '+esc(c.name)+'</div><div class="container-picker-path">'+esc(path)+'</div></div></div>'}).join('')}
 
-function showContainerPicker(){
-  const v=document.getElementById('itemContainerInput').value.trim();
-  renderContainerPicker(v);
-}
-
-async function aiContainerSearch(q){
-  if(!ANTHROPIC_API_KEY||!allContainers.length)return;
-  const badge=document.getElementById('containerSearchBadge');
-  try{
-    const l=allContainers.map(c=>c.code+'|'+c.name).join('\n');
-    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':ANTHROPIC_API_KEY,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:200,messages:[{role:'user',content:'Пошук контейнера:"'+q+'"\nкод|назва:\n'+l+'\nJSON масив кодів найбільш релевантних:'}]})});
-    if(!r.ok)throw 1;
-    const d=await r.json(),m=d.content[0].text.match(/\[.*\]/s);
-    if(m){
-      const codes=JSON.parse(m[0]);
-      const sorted=codes.map(code=>allContainers.find(c=>c.code===code)).filter(Boolean);
-      // Add remaining that text-match
-      const remaining=allContainers.filter(c=>!codes.includes(c.code)&&(c.code.toLowerCase().includes(q.toLowerCase())||c.name.toLowerCase().includes(q.toLowerCase())));
-      renderContainerPickerList([...sorted,...remaining],'containerPickerList');
-      badge.style.display='inline-block';badge.className='search-ai-badge ai';badge.textContent='✨ AI';
-    }
-  }catch(e){
-    badge.style.display='none';
-  }
-}
-
-function renderContainerPicker(query){
-  const badge=document.getElementById('containerSearchBadge');
-  badge.style.display='none';
-  let containers=getContainersSortedByLastUsed();
-  if(query){
-    const q=query.toLowerCase();
-    containers=containers.filter(c=>c.code.toLowerCase().includes(q)||c.name.toLowerCase().includes(q));
-  }
-  renderContainerPickerList(containers,'containerPickerList');
-}
-
-function renderContainerPickerList(containers,listId){
-  const list=document.getElementById(listId);
-  if(!containers.length){
-    list.innerHTML='<div class="container-picker-empty">Немає контейнерів</div>';
-    return;
-  }
-  list.innerHTML=containers.map(c=>{
-    const path=getContainerPath(c);
-    const isSelected=(listId==='containerPickerList'?selectedContainerCode:selectedParentContainerCode)===c.code;
-    const ph=c.photoURL?'<img class="container-picker-photo" src="'+c.photoURL+'">':'<div class="container-picker-code">'+esc(c.code)+'</div>';
-    return '<div class="container-picker-item'+(isSelected?' selected':'')+'" onclick="selectContainerFromPicker(\''+c.code+'\',\''+listId+'\')">'+ph+'<div class="container-picker-info"><div class="container-picker-name">'+esc(c.code)+' — '+esc(c.name)+'</div><div class="container-picker-path">'+esc(path)+'</div></div></div>';
-  }).join('');
-}
-
-function selectContainerFromPicker(code,listId){
-  if(listId==='containerPickerList'){
-    selectedContainerCode=code;
-    document.getElementById('itemContainerInput').value=code;
-    renderContainerPicker(document.getElementById('itemContainerInput').value.trim());
-  } else {
-    // Parent container picker
-    if(selectedParentContainerCode===code){
-      // Deselect
-      selectedParentContainerCode='';
-      document.getElementById('containerParent').value='';
-      document.getElementById('parentContainerSearch').value='';
-    } else {
-      selectedParentContainerCode=code;
-      document.getElementById('containerParent').value=code;
-      const c=allContainers.find(x=>x.code===code);
-      document.getElementById('parentContainerSearch').value=c?c.code+' — '+c.name:code;
-    }
-    renderParentContainerPicker(document.getElementById('parentContainerSearch').value.trim());
-  }
-}
-
-// Parent container picker for container form
-function filterParentContainerPicker(){
-  const v=document.getElementById('parentContainerSearch').value.trim();
-  if(!v){selectedParentContainerCode='';document.getElementById('containerParent').value='';}
-  renderParentContainerPicker(v);
-}
-function showParentContainerPicker(){
-  const v=document.getElementById('parentContainerSearch').value.trim();
-  renderParentContainerPicker(v);
-}
-function renderParentContainerPicker(query){
-  let containers=getContainersSortedByLastUsed();
-  // exclude current container being edited
-  const curCode=document.getElementById('containerCode').value.trim();
-  if(curCode)containers=containers.filter(c=>c.code!==curCode);
-  if(query){
-    const q=query.toLowerCase();
-    containers=containers.filter(c=>c.code.toLowerCase().includes(q)||c.name.toLowerCase().includes(q)||(c.code+' — '+c.name).toLowerCase().includes(q));
-  }
-  renderContainerPickerList(containers,'parentContainerPickerList');
-}
+function selectNoContainer(){noContainerSelected=!noContainerSelected;if(noContainerSelected){selectedContainerCode='';document.getElementById('itemContainerInput').value=''}updateNoContainerOption();renderContainerPicker('')}
+function updateNoContainerOption(){const el=document.getElementById('noContainerOption');if(el)el.className='no-container-option'+(noContainerSelected?' selected':'')}
+function selectContainerFromPicker(code,listId){noContainerSelected=false;updateNoContainerOption();if(listId==='containerPickerList'){selectedContainerCode=code;document.getElementById('itemContainerInput').value=code;renderContainerPicker(document.getElementById('itemContainerInput').value.trim())}else{if(selectedParentContainerCode===code){selectedParentContainerCode='';document.getElementById('containerParent').value='';document.getElementById('parentContainerSearch').value=''}else{selectedParentContainerCode=code;document.getElementById('containerParent').value=code;const c=allContainers.find(x=>x.code===code);document.getElementById('parentContainerSearch').value=c?c.code+' — '+c.name:code}renderParentContainerPicker(document.getElementById('parentContainerSearch').value.trim())}}
+function filterParentContainerPicker(){const v=document.getElementById('parentContainerSearch').value.trim();if(!v){selectedParentContainerCode='';document.getElementById('containerParent').value=''}renderParentContainerPicker(v)}
+function showParentContainerPicker(){renderParentContainerPicker(document.getElementById('parentContainerSearch').value.trim())}
+function renderParentContainerPicker(query){let containers=getContainersSortedByLastUsed();const curCode=document.getElementById('containerCode').value.trim();if(curCode)containers=containers.filter(c=>c.code!==curCode);if(query){const q=query.toLowerCase();containers=containers.filter(c=>c.code.toLowerCase().includes(q)||c.name.toLowerCase().includes(q)||(c.code+' — '+c.name).toLowerCase().includes(q))}renderContainerPickerList(containers,'parentContainerPickerList')}
 
 function showNameSugg(inp,suggId){const sg=document.getElementById(suggId),v=inp.value.toLowerCase().trim();if(!v){sg.classList.remove('show');return}const n=[...new Set(allContainers.map(c=>c.name))].filter(x=>x.toLowerCase().includes(v));if(!n.length){sg.classList.remove('show');return}sg.innerHTML=n.map(x=>'<div class="suggestion-item" onmousedown="this.closest(\'.form-group\').querySelector(\'input\').value=\''+esc(x)+'\';document.getElementById(\''+suggId+'\').classList.remove(\'show\')">'+esc(x)+'</div>').join('');sg.classList.add('show')}
-
 function toggleNewContainerInline(){const f=document.getElementById('inlineContForm');f.classList.toggle('show');if(f.classList.contains('show')){document.getElementById('inlineContCode').value=getNextCode();document.getElementById('inlineContName').value=''}}
-async function saveInlineContainer(){const code=document.getElementById('inlineContCode').value.trim(),name=document.getElementById('inlineContName').value.trim()||'Контейнер '+code;try{const ref=await db.collection('containers').add({code,name,description:'',photoURL:'',parentContainerId:null,createdAt:firebase.firestore.FieldValue.serverTimestamp(),lastUsedAt:firebase.firestore.FieldValue.serverTimestamp()});allContainers.unshift({id:ref.id,code,name,description:'',photoURL:'',parentContainerId:null,lastUsedAt:{seconds:Date.now()/1000}});selectedContainerCode=code;document.getElementById('itemContainerInput').value=code;document.getElementById('inlineContForm').classList.remove('show');renderContainerPicker('');showToast(code+' створено!','success')}catch(e){showToast('Помилка','error')}}
-
+async function saveInlineContainer(){const code=document.getElementById('inlineContCode').value.trim(),name=document.getElementById('inlineContName').value.trim()||'Контейнер '+code;try{const ref=await db.collection('containers').add({code,name,description:'',photoURL:'',parentContainerId:null,createdAt:firebase.firestore.FieldValue.serverTimestamp(),lastUsedAt:firebase.firestore.FieldValue.serverTimestamp()});allContainers.unshift({id:ref.id,code,name,description:'',photoURL:'',parentContainerId:null,lastUsedAt:{seconds:Date.now()/1000}});selectedContainerCode=code;noContainerSelected=false;updateNoContainerOption();document.getElementById('itemContainerInput').value=code;document.getElementById('inlineContForm').classList.remove('show');renderContainerPicker('');showToast(code+' створено!','success')}catch(e){showToast('Помилка','error')}}
 function getNextCode(){const ex=allContainers.map(c=>c.code).sort();for(let i=0;i<676;i++){const c=String.fromCharCode(65+Math.floor(i/26))+String.fromCharCode(65+(i%26));if(!ex.includes(c))return c}return'ZZ'}
 
 function capturePhoto(id){document.getElementById(id).click()}
-async function handlePhoto(e,capId){const f=e.target.files[0];if(!f)return;const blob=await compressImage(f,800,.7);if(capId==='contPhotoCap')capturedContPhotoBlob=blob;else capturedPhotoBlob=blob;const cap=document.getElementById(capId);cap.querySelector('img')?.remove();cap.querySelector('.remove-photo')?.remove();const img=document.createElement('img');img.src=URL.createObjectURL(blob);cap.appendChild(img);const btn=document.createElement('button');btn.className='remove-photo';btn.innerHTML='✕';btn.onclick=ev=>{ev.stopPropagation();if(capId==='contPhotoCap')capturedContPhotoBlob=null;else capturedPhotoBlob=null;img.remove();btn.remove();e.target.value=''};cap.appendChild(btn)}
+async function handlePhoto(e,capId){const f=e.target.files[0];if(!f)return;const blob=await compressImage(f,800,.7);if(capId==='contPhotoCap')capturedContPhotoBlob=blob;else capturedPhotoBlob=blob;const cap=document.getElementById(capId);cap.querySelector('img')?.remove();cap.querySelector('.remove-photo')?.remove();cap.querySelector('.retake-photo')?.remove();const img=document.createElement('img');img.src=URL.createObjectURL(blob);cap.appendChild(img);const isContainer=capId==='contPhotoCap';const inputId=capId==='contPhotoCap'?'contPhotoInput':(capId==='itemPhotoCap'?'itemPhotoInput':'addPhotoInput');addPhotoButtons(cap,inputId,isContainer)}
 function compressImage(f,mx,q){return new Promise(r=>{const rd=new FileReader();rd.onload=e=>{const im=new Image();im.onload=()=>{const cv=document.createElement('canvas');let w=im.width,h=im.height;if(w>h&&w>mx){h=h*mx/w;w=mx}else if(h>mx){w=w*mx/h;h=mx}cv.width=w;cv.height=h;cv.getContext('2d').drawImage(im,0,0,w,h);cv.toBlob(r,'image/jpeg',q)};im.src=e.target.result};rd.readAsDataURL(f)})}
 async function uploadPhoto(blob){const path='items/'+currentUser.uid+'/'+Date.now()+'.jpg',ref=storage.ref(path),task=ref.put(blob);await task;return await ref.getDownloadURL()}
+async function updateContainerLastUsed(containerCode){const cont=allContainers.find(c=>c.code===containerCode);if(cont){try{await db.collection('containers').doc(cont.id).update({lastUsedAt:firebase.firestore.FieldValue.serverTimestamp()});cont.lastUsedAt={seconds:Date.now()/1000}}catch(e){}}}
 
-// Update lastUsedAt on container when item is saved to it
-async function updateContainerLastUsed(containerCode){
-  const cont=allContainers.find(c=>c.code===containerCode);
-  if(cont){
-    try{
-      await db.collection('containers').doc(cont.id).update({lastUsedAt:firebase.firestore.FieldValue.serverTimestamp()});
-      cont.lastUsedAt={seconds:Date.now()/1000};
-    }catch(e){}
-  }
-}
+async function saveItem(){const name=document.getElementById('itemName').value.trim();const containerId=noContainerSelected?'':(selectedContainerCode||document.getElementById('itemContainerInput').value.trim());const desc=document.getElementById('itemDesc').value.trim();const btn=document.getElementById('saveItemBtn');btn.disabled=true;btn.textContent='Зберігаю...';
+try{let photoURL='';if(capturedPhotoBlob)photoURL=await uploadPhoto(capturedPhotoBlob);if(editingItemId){const item=allItems.find(i=>i.id===editingItemId);if(!photoURL)photoURL=item.photoURL||'';await db.collection('items').doc(editingItemId).update({name,description:desc,containerId,photoURL,described:!!desc,updatedAt:firebase.firestore.FieldValue.serverTimestamp()});Object.assign(item,{name,description:desc,containerId,photoURL,described:!!desc});showToast('Оновлено!','success')}else{const ref=await db.collection('items').add({name,description:desc,photoURL,containerId,described:!!desc,starred:false,markedTrash:false,createdAt:firebase.firestore.FieldValue.serverTimestamp(),updatedAt:firebase.firestore.FieldValue.serverTimestamp()});allItems.unshift({id:ref.id,name,description:desc,photoURL,containerId,described:!!desc,starred:false,markedTrash:false});showToast('Додано!','success')}if(containerId)await updateContainerLastUsed(containerId);closeModal('addModal');renderItems()}catch(e){showToast('Помилка','error')}finally{btn.disabled=false;btn.textContent=editingItemId?'Оновити':'Зберегти річ'}}
 
-async function saveItem(){
-  const name=document.getElementById('itemName').value.trim();
-  const containerId=selectedContainerCode||document.getElementById('itemContainerInput').value.trim();
-  const desc=document.getElementById('itemDesc').value.trim();
-  const btn=document.getElementById('saveItemBtn');
-  btn.disabled=true;btn.textContent='Зберігаю...';
-  try{
-    let photoURL='';
-    if(capturedPhotoBlob)photoURL=await uploadPhoto(capturedPhotoBlob);
-    if(editingItemId){
-      const item=allItems.find(i=>i.id===editingItemId);
-      if(!photoURL)photoURL=item.photoURL||'';
-      await db.collection('items').doc(editingItemId).update({name,description:desc,containerId,photoURL,described:!!desc,updatedAt:firebase.firestore.FieldValue.serverTimestamp()});
-      Object.assign(item,{name,description:desc,containerId,photoURL,described:!!desc});
-      showToast('Оновлено!','success');
-    }else{
-      const ref=await db.collection('items').add({name,description:desc,photoURL,containerId,described:!!desc,createdAt:firebase.firestore.FieldValue.serverTimestamp(),updatedAt:firebase.firestore.FieldValue.serverTimestamp()});
-      allItems.unshift({id:ref.id,name,description:desc,photoURL,containerId,described:!!desc});
-      showToast('Додано!','success');
-    }
-    if(containerId)await updateContainerLastUsed(containerId);
-    closeModal('addModal');
-    // Navigate to items page and render
-    showPage('pageItems',document.querySelectorAll('.nav-item')[1]);
-    renderItems();
-  }catch(e){showToast('Помилка','error')}finally{btn.disabled=false;btn.textContent=editingItemId?'Оновити':'Зберегти річ'}
-}
+async function saveContainer(){const code=document.getElementById('containerCode').value.trim();const name=document.getElementById('containerName').value.trim()||'Контейнер '+code;const desc=document.getElementById('containerDesc').value.trim();const parentCode=selectedParentContainerCode||document.getElementById('containerParent').value;const parentCont=parentCode?allContainers.find(c=>c.code===parentCode):null;const btn=document.getElementById('saveContBtn');btn.disabled=true;btn.textContent='Зберігаю...';
+try{let photoURL='';if(capturedContPhotoBlob)photoURL=await uploadPhoto(capturedContPhotoBlob);if(editingContId){const cont=allContainers.find(c=>c.id===editingContId);if(!photoURL)photoURL=cont.photoURL||'';await db.collection('containers').doc(editingContId).update({name,description:desc,photoURL,parentContainerId:parentCont?parentCont.id:null});Object.assign(cont,{name,description:desc,photoURL,parentContainerId:parentCont?parentCont.id:null});showToast('Оновлено!','success')}else{const ref=await db.collection('containers').add({code,name,description:desc,photoURL,parentContainerId:parentCont?parentCont.id:null,createdAt:firebase.firestore.FieldValue.serverTimestamp(),lastUsedAt:firebase.firestore.FieldValue.serverTimestamp()});allContainers.unshift({id:ref.id,code,name,description:desc,photoURL,parentContainerId:parentCont?parentCont.id:null,lastUsedAt:{seconds:Date.now()/1000}});showToast('Створено!','success');showQRSticker(code,name)}closeModal('addModal');renderContainers()}catch(e){showToast('Помилка','error')}finally{btn.disabled=false;btn.textContent=editingContId?'Оновити':'Зберегти'}}
 
-async function saveContainer(){
-  const code=document.getElementById('containerCode').value.trim();
-  const name=document.getElementById('containerName').value.trim()||'Контейнер '+code;
-  const desc=document.getElementById('containerDesc').value.trim();
-  const parentCode=selectedParentContainerCode||document.getElementById('containerParent').value;
-  const parentCont=parentCode?allContainers.find(c=>c.code===parentCode):null;
-  const btn=document.getElementById('saveContBtn');
-  btn.disabled=true;btn.textContent='Зберігаю...';
-  try{
-    let photoURL='';
-    if(capturedContPhotoBlob)photoURL=await uploadPhoto(capturedContPhotoBlob);
-    if(editingContId){
-      const cont=allContainers.find(c=>c.id===editingContId);
-      if(!photoURL)photoURL=cont.photoURL||'';
-      await db.collection('containers').doc(editingContId).update({name,description:desc,photoURL,parentContainerId:parentCont?parentCont.id:null});
-      Object.assign(cont,{name,description:desc,photoURL,parentContainerId:parentCont?parentCont.id:null});
-      showToast('Оновлено!','success');
-    }else{
-      const ref=await db.collection('containers').add({code,name,description:desc,photoURL,parentContainerId:parentCont?parentCont.id:null,createdAt:firebase.firestore.FieldValue.serverTimestamp(),lastUsedAt:firebase.firestore.FieldValue.serverTimestamp()});
-      allContainers.unshift({id:ref.id,code,name,description:desc,photoURL,parentContainerId:parentCont?parentCont.id:null,lastUsedAt:{seconds:Date.now()/1000}});
-      showToast('Створено!','success');
-      showQRSticker(code,name);
-    }
-    closeModal('addModal');
-    // Navigate to containers page and render
-    showPage('pageContainers',document.querySelectorAll('.nav-item')[3]);
-    renderContainers();
-  }catch(e){showToast('Помилка','error')}finally{btn.disabled=false;btn.textContent=editingContId?'Оновити':'Зберегти'}
-}
+// Item detail with swipe navigation
+function showItemDetail(id){const idx=currentDetailItems.findIndex(i=>i.id===id);if(idx===-1){currentDetailItems=[allItems.find(i=>i.id===id)].filter(Boolean);currentDetailIndex=0}else{currentDetailIndex=idx}renderItemDetail();openModal('detailModal')}
+function renderItemDetail(){const item=currentDetailItems[currentDetailIndex];if(!item)return;const cont=allContainers.find(c=>c.code===item.containerId);const pathParts=cont?getContainerPathVertical(cont):[];let pathHTML='';if(pathParts.length)pathHTML='<div class="detail-path">'+pathParts.map((p,i)=>'<span class="detail-path-item" style="padding-left:'+i*16+'px">«'+esc(p.code)+'» '+esc(p.name)+'</span>').join('<br>')+'</div>';
+const hasPrev=currentDetailIndex>0;const hasNext=currentDetailIndex<currentDetailItems.length-1;
+document.getElementById('detailContent').innerHTML=(item.photoURL?'<img class="detail-photo" src="'+item.photoURL+'">':'')+'<div class="detail-title">'+esc(item.name||'Без назви')+'</div>'+pathHTML+(item.description?'<div class="detail-desc">'+esc(item.description)+'</div>':'')+'<div class="detail-marks"><button class="detail-star-btn'+(item.starred?' active':'')+'" onclick="toggleStar(\''+item.id+'\')">'+(item.starred?'⭐ Зірочка':'☆ Зірочка')+'</button><button class="detail-trash-btn'+(item.markedTrash?' active':'')+'" onclick="toggleTrash(\''+item.id+'\')">'+(item.markedTrash?'🗑️ На викид':'🗑️ На викид')+'</button></div><div class="detail-meta">'+(item.containerId?'<div class="detail-meta-row"><span class="detail-meta-label">Контейнер:</span><span>'+esc(item.containerId)+(cont?' — '+esc(cont.name):'')+'</span></div>':'')+'<div class="detail-meta-row"><span class="detail-meta-label">Описано:</span><span>'+(item.described?'✅':'⚠️')+'</span></div></div><button class="btn btn-outline" style="width:100%;margin-bottom:8px" onclick="editItem(\''+item.id+'\')">✏️ Редагувати</button><div class="btn-group"><button class="btn btn-danger btn-sm" style="flex:0 0 auto;padding:8px 18px" onclick="deleteItem(\''+item.id+'\')">🗑️</button></div>'+(currentDetailItems.length>1?'<div class="detail-nav"><button class="detail-nav-btn" onclick="prevItem()"'+(hasPrev?'':' disabled')+'>← Назад</button><span style="font-size:13px;color:var(--text2);display:flex;align-items:center">'+(currentDetailIndex+1)+'/'+currentDetailItems.length+'</span><button class="detail-nav-btn" onclick="nextItem()"'+(hasNext?'':' disabled')+'>Далі →</button></div>':'')}
+function prevItem(){if(currentDetailIndex>0){currentDetailIndex--;renderItemDetail()}}
+function nextItem(){if(currentDetailIndex<currentDetailItems.length-1){currentDetailIndex++;renderItemDetail()}}
 
-function showItemDetail(id){
-  const item=allItems.find(i=>i.id===id);if(!item)return;
-  const cont=allContainers.find(c=>c.code===item.containerId),path=cont?getContainerPath(cont):'';
-  document.getElementById('detailContent').innerHTML=
-    (item.photoURL?'<img class="detail-photo" src="'+item.photoURL+'">':'')+
-    '<div class="detail-title">'+esc(item.name||'Без назви')+'</div>'+
-    '<div class="detail-desc">'+esc(item.description||'Без опису')+'</div>'+
-    '<div class="detail-meta">'+
-      (item.containerId?'<div class="detail-meta-row"><span class="detail-meta-label">Контейнер:</span><span>'+esc(item.containerId)+(cont?' — '+esc(cont.name):'')+'</span></div>':'')+
-      (path?'<div class="detail-meta-row"><span class="detail-meta-label">Шлях:</span><span>'+esc(path)+'</span></div>':'')+
-      '<div class="detail-meta-row"><span class="detail-meta-label">Описано:</span><span>'+(item.described?'✅':'⚠️')+'</span></div>'+
-    '</div>'+
-    '<div class="btn-group"><button class="btn btn-outline" onclick="editItem(\''+item.id+'\')">✏️ Редагувати</button><button class="btn btn-danger btn-sm" onclick="deleteItem(\''+item.id+'\')">🗑️</button></div>';
-  openModal('detailModal');
-}
-
+async function toggleStar(id){const item=allItems.find(i=>i.id===id);if(!item)return;item.starred=!item.starred;item.starredAt=item.starred?Date.now()/1000:0;try{await db.collection('items').doc(id).update({starred:item.starred,starredAt:item.starred?firebase.firestore.FieldValue.serverTimestamp():null})}catch(e){}renderItemDetail()}
+async function toggleTrash(id){const item=allItems.find(i=>i.id===id);if(!item)return;item.markedTrash=!item.markedTrash;item.markedTrashAt=item.markedTrash?Date.now()/1000:0;try{await db.collection('items').doc(id).update({markedTrash:item.markedTrash,markedTrashAt:item.markedTrash?firebase.firestore.FieldValue.serverTimestamp():null})}catch(e){}renderItemDetail()}
 async function deleteItem(id){if(!confirm('Видалити?'))return;await db.collection('items').doc(id).delete();allItems=allItems.filter(i=>i.id!==id);closeModal('detailModal');showToast('Видалено','info');renderItems()}
-function editItem(id){
-  const item=allItems.find(i=>i.id===id);if(!item)return;
-  closeModal('detailModal');editingItemId=id;capturedPhotoBlob=null;
-  setTimeout(()=>{
-    openModal('addModal');
-    document.getElementById('addStep1').style.display='none';
-    document.getElementById('addItemForm').style.display='block';
-    document.getElementById('addContainerForm').style.display='none';
-    document.getElementById('addModalTitle').textContent='Редагувати';
-    document.getElementById('itemName').value=item.name||'';
-    document.getElementById('itemDesc').value=item.description||'';
-    document.getElementById('itemContainerInput').value=item.containerId||'';
-    selectedContainerCode=item.containerId||'';
-    document.getElementById('saveItemBtn').textContent='Оновити';
-    document.getElementById('saveItemBtn').onclick=()=>saveItem();
-    renderContainerPicker('');
-    if(item.photoURL){const img=document.createElement('img');img.src=item.photoURL;document.getElementById('addPhotoCap').appendChild(img)}
-  },300);
-}
 
-function showContainerDetail(id){
-  const cont=allContainers.find(c=>c.id===id);if(!cont)return;
-  const items=allItems.filter(i=>i.containerId===cont.code),ch=allContainers.filter(c=>c.parentContainerId===id);
-  document.getElementById('containerDetailContent').innerHTML=
-    (cont.photoURL?'<img class="detail-photo" src="'+cont.photoURL+'">':'')+
-    '<div class="detail-title">'+esc(cont.code)+' — '+esc(cont.name)+'</div>'+
-    (cont.description?'<div class="detail-desc">'+esc(cont.description)+'</div>':'')+
-    '<div class="qr-sticker" id="contQR_'+cont.id+'"></div>'+
-    '<div class="btn-group" style="margin-bottom:16px"><button class="btn btn-outline btn-sm" onclick="printSingleSticker(\''+cont.code+'\',\''+esc(cont.name)+'\')">🖨️</button><button class="btn btn-outline btn-sm" onclick="editContainer(\''+cont.id+'\')">✏️</button><button class="btn btn-danger btn-sm" onclick="deleteContainer(\''+cont.id+'\')">🗑️</button></div>'+
-    (ch.length?'<div style="margin-bottom:12px"><strong>Вкладені:</strong></div><div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px">'+ch.map(x=>'<div class="container-card" onclick="closeModal(\'containerDetailModal\');setTimeout(()=>showContainerDetail(\''+x.id+'\'),300)"><div class="container-code">'+esc(x.code)+'</div><div class="container-info"><div class="container-name">'+esc(x.name)+'</div></div></div>').join('')+'</div>':'')+
-    (items.length?'<div style="margin-bottom:12px"><strong>Речі ('+items.length+'):</strong></div><div class="search-results">'+items.map(i=>itemCardHTML(i)).join('')+'</div>':'<div class="empty-state"><p>Порожній</p></div>');
-  openModal('containerDetailModal');
-  setTimeout(()=>{const el=document.getElementById('contQR_'+cont.id);if(el){el.innerHTML='';new QRCode(el,{text:cont.code,width:128,height:128});el.innerHTML+='<div class="qr-sticker-code">'+esc(cont.code)+'</div><div class="qr-sticker-name">'+esc(cont.name)+'</div>'}},100);
-}
+function editItem(id){const item=allItems.find(i=>i.id===id);if(!item)return;closeModal('detailModal');editingItemId=id;capturedPhotoBlob=null;setTimeout(()=>{openModal('addModal');document.getElementById('addStep1').style.display='none';document.getElementById('addItemForm').style.display='block';document.getElementById('addContainerForm').style.display='none';document.getElementById('addModalTitle').textContent='Редагувати';document.getElementById('itemName').value=item.name||'';document.getElementById('itemDesc').value=item.description||'';document.getElementById('itemContainerInput').value=item.containerId||'';selectedContainerCode=item.containerId||'';noContainerSelected=!item.containerId;updateNoContainerOption();document.getElementById('saveItemBtn').textContent='Оновити';document.getElementById('saveItemBtn').onclick=()=>saveItem();renderContainerPicker('');if(item.photoURL){const cap=document.getElementById('itemPhotoCap');const img=document.createElement('img');img.src=item.photoURL;cap.appendChild(img);addPhotoButtons(cap,'itemPhotoInput',false)}},300)}
 
-function editContainer(id){
-  const cont=allContainers.find(c=>c.id===id);if(!cont)return;
-  closeModal('containerDetailModal');editingContId=id;capturedContPhotoBlob=null;
-  setTimeout(()=>{
-    openModal('addModal');
-    document.getElementById('addStep1').style.display='none';
-    document.getElementById('addItemForm').style.display='none';
-    document.getElementById('addContainerForm').style.display='block';
-    document.getElementById('addModalTitle').textContent='Редагувати контейнер';
-    document.getElementById('containerCode').value=cont.code;
-    document.getElementById('containerName').value=cont.name||'';
-    document.getElementById('containerDesc').value=cont.description||'';
-    document.getElementById('saveContBtn').textContent='Оновити';
-    document.getElementById('saveContBtn').onclick=()=>saveContainer();
-    // Set parent
-    if(cont.parentContainerId){
-      const p=allContainers.find(c=>c.id===cont.parentContainerId);
-      if(p){
-        selectedParentContainerCode=p.code;
-        document.getElementById('containerParent').value=p.code;
-        document.getElementById('parentContainerSearch').value=p.code+' — '+p.name;
-      }
-    } else {
-      selectedParentContainerCode='';
-      document.getElementById('containerParent').value='';
-      document.getElementById('parentContainerSearch').value='';
-    }
-    renderParentContainerPicker('');
-    if(cont.photoURL){const img=document.createElement('img');img.src=cont.photoURL;document.getElementById('contPhotoCap').appendChild(img)}
-  },300);
-}
+function showContainerDetail(id){const cont=allContainers.find(c=>c.id===id);if(!cont)return;const items=allItems.filter(i=>i.containerId===cont.code);const ch=allContainers.filter(c=>c.parentContainerId===id);const pathParts=getContainerPathVertical(cont);let pathHTML='';if(pathParts.length>1)pathHTML='<div class="detail-path">'+pathParts.map((p,i)=>'<span class="detail-path-item" style="padding-left:'+i*16+'px">«'+esc(p.code)+'» '+esc(p.name)+'</span>').join('<br>')+'</div>';
+document.getElementById('containerDetailContent').innerHTML=(cont.photoURL?'<img class="detail-photo" src="'+cont.photoURL+'">':'')+'<div class="detail-title">'+esc(cont.code)+' — '+esc(cont.name)+'</div>'+pathHTML+(cont.description?'<div class="detail-desc">'+esc(cont.description)+'</div>':'')+'<div class="qr-sticker" id="contQR_'+cont.id+'"></div><button class="btn btn-outline" style="width:100%;margin-bottom:8px" onclick="editContainer(\''+cont.id+'\')">✏️ Змінити контейнер</button><div class="btn-group" style="margin-bottom:16px"><button class="btn btn-outline btn-sm" onclick="printSingleSticker(\''+cont.code+'\',\''+esc(cont.name)+'\')">🖨️ Друк</button><button class="btn btn-danger btn-sm" onclick="deleteContainer(\''+cont.id+'\')">🗑️ Видалити</button></div>'+(ch.length?'<div style="margin-bottom:12px"><strong>Вкладені:</strong></div><div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px">'+ch.map(x=>'<div class="container-card" onclick="closeModal(\'containerDetailModal\');setTimeout(()=>showContainerDetail(\''+x.id+'\'),300)"><div class="container-code">'+esc(x.code)+'</div><div class="container-info"><div class="container-name">'+esc(x.name)+'</div></div></div>').join('')+'</div>':'')+(items.length?'<div style="margin-bottom:12px"><strong>Речі ('+items.length+'):</strong></div><div class="search-results">'+items.map(i=>itemCardClickable(i)).join('')+'</div>':'<div class="empty-state"><p>Порожній</p></div>');
+openModal('containerDetailModal');setTimeout(()=>{const el=document.getElementById('contQR_'+cont.id);if(el){el.innerHTML='';new QRCode(el,{text:cont.code,width:128,height:128});el.innerHTML+='<div class="qr-sticker-code">'+esc(cont.code)+'</div><div class="qr-sticker-name">'+esc(cont.name)+'</div>'}},100)}
 
+function itemCardClickable(item){const ph=item.photoURL?'<img class="item-card-photo" src="'+item.photoURL+'">':'<div class="item-card-photo placeholder">📦</div>';const starBadge=item.starred?'<span class="badge-star active">⭐</span>':'';return '<div class="item-card" onclick="closeModal(\'containerDetailModal\');setTimeout(()=>showItemDetail(\''+item.id+'\'),300)">'+ph+'<div class="item-card-info"><div class="item-card-name">'+esc(item.name||'Без назви')+starBadge+'</div><div class="item-card-desc">'+esc(item.description||'Без опису')+'</div></div></div>'}
+
+function editContainer(id){const cont=allContainers.find(c=>c.id===id);if(!cont)return;closeModal('containerDetailModal');editingContId=id;capturedContPhotoBlob=null;setTimeout(()=>{openModal('addModal');document.getElementById('addStep1').style.display='none';document.getElementById('addItemForm').style.display='none';document.getElementById('addContainerForm').style.display='block';document.getElementById('addModalTitle').textContent='Редагувати контейнер';document.getElementById('containerCode').value=cont.code;document.getElementById('containerName').value=cont.name||'';document.getElementById('containerDesc').value=cont.description||'';document.getElementById('saveContBtn').textContent='Оновити';document.getElementById('saveContBtn').onclick=()=>saveContainer();if(cont.parentContainerId){const p=allContainers.find(c=>c.id===cont.parentContainerId);if(p){selectedParentContainerCode=p.code;document.getElementById('containerParent').value=p.code;document.getElementById('parentContainerSearch').value=p.code+' — '+p.name}}else{selectedParentContainerCode='';document.getElementById('containerParent').value='';document.getElementById('parentContainerSearch').value=''}renderParentContainerPicker('');if(cont.photoURL){const cap=document.getElementById('contPhotoCap');const img=document.createElement('img');img.src=cont.photoURL;cap.appendChild(img);addPhotoButtons(cap,'contPhotoInput',true)}},300)}
 async function deleteContainer(id){if(!confirm('Видалити контейнер?'))return;await db.collection('containers').doc(id).delete();allContainers=allContainers.filter(c=>c.id!==id);closeModal('containerDetailModal');showToast('Видалено','info');renderContainers()}
 
 function showQRSticker(code,name){document.getElementById('detailContent').innerHTML='<div class="qr-sticker" id="newQR"></div><button class="btn btn-primary" onclick="printSingleSticker(\''+code+'\',\''+esc(name)+'\')">🖨️ Друкувати</button><button class="btn btn-outline" style="width:100%;margin-top:8px" onclick="closeModal(\'detailModal\')">Закрити</button>';openModal('detailModal');setTimeout(()=>{const el=document.getElementById('newQR');new QRCode(el,{text:code,width:160,height:160});el.innerHTML+='<div class="qr-sticker-code">'+code+'</div><div class="qr-sticker-name">'+name+'</div>'},100)}
 function printSingleSticker(c,n){printStickers([{code:c,name:n}])}
-
-function openQRScanner(){openModal('qrScanModal');setTimeout(()=>{try{qrScanner=new Html5Qrcode('qrScannerEl');qrScanner.start({facingMode:'environment'},{fps:10,qrbox:{width:250,height:250}},t=>{selectedContainerCode=t;document.getElementById('itemContainerInput').value=t;const c=allContainers.find(x=>x.code===t);showToast(c?c.code+' — '+c.name:'Код: '+t,'success');closeQRScanner();renderContainerPicker('')}).catch(()=>showToast('Камера недоступна','error'))}catch(e){showToast('Помилка','error')}},300)}
+function openQRScanner(){openModal('qrScanModal');setTimeout(()=>{try{qrScanner=new Html5Qrcode('qrScannerEl');qrScanner.start({facingMode:'environment'},{fps:10,qrbox:{width:250,height:250}},t=>{selectedContainerCode=t;noContainerSelected=false;updateNoContainerOption();document.getElementById('itemContainerInput').value=t;const c=allContainers.find(x=>x.code===t);showToast(c?c.code+' — '+c.name:'Код: '+t,'success');closeQRScanner();renderContainerPicker('')}).catch(()=>showToast('Камера недоступна','error'))}catch(e){showToast('Помилка','error')}},300)}
 function closeQRScanner(){if(qrScanner){qrScanner.stop().catch(()=>{});qrScanner.clear();qrScanner=null}closeModal('qrScanModal')}
 
 function exportAll(){downloadJSON({items:allItems,containers:allContainers},'inventory-full.json');showToast('Експортовано!','success')}
@@ -681,67 +461,19 @@ function updateKeyStatus(){document.getElementById('apiKeyStatus').innerHTML=ANT
 
 function openModal(id){document.getElementById(id).classList.add('visible');document.body.style.overflow='hidden'}
 function closeModal(id){document.getElementById(id).classList.remove('visible');document.body.style.overflow='';if(id==='qrScanModal')closeQRScanner()}
-document.querySelectorAll('.modal-overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o){closeModal(o.id)}}));
+document.querySelectorAll('.modal-overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)closeModal(o.id)}));
 
 // Swipe-to-dismiss for modals
-(function(){
-  const swipeModals=['detailModal','containerDetailModal'];
-  swipeModals.forEach(modalId=>{
-    const overlay=document.getElementById(modalId);
-    const innerSel=modalId+'Inner';
-    let startY=0,currentY=0,isDragging=false,modalEl=null;
+(function(){['detailModal','containerDetailModal','addModal'].forEach(modalId=>{const overlay=document.getElementById(modalId);const innerSel=modalId+'Inner';let startY=0,currentY=0,isDragging=false,modalEl=null;
+overlay.addEventListener('touchstart',e=>{modalEl=document.getElementById(innerSel);if(!modalEl)return;if(modalEl.scrollTop>5)return;startY=e.touches[0].clientY;currentY=startY;isDragging=true;modalEl.style.transition='none'},{passive:true});
+overlay.addEventListener('touchmove',e=>{if(!isDragging||!modalEl)return;currentY=e.touches[0].clientY;const dy=currentY-startY;if(dy>0){modalEl.style.transform='translateY('+dy+'px)';overlay.style.background='rgba(0,0,0,'+(.5*Math.max(0,1-dy/400))+')'}},{passive:true});
+overlay.addEventListener('touchend',()=>{if(!isDragging||!modalEl)return;isDragging=false;const dy=currentY-startY;modalEl.style.transition='transform .25s ease';overlay.style.transition='background .25s ease';if(dy>120){modalEl.style.transform='translateY(100%)';overlay.style.background='rgba(0,0,0,0)';setTimeout(()=>{closeModal(modalId);modalEl.style.transform='';modalEl.style.transition='';overlay.style.background='';overlay.style.transition=''},250)}else{modalEl.style.transform='';overlay.style.background='';setTimeout(()=>{modalEl.style.transition='';overlay.style.transition=''},250)}},{passive:true})})})();
 
-    overlay.addEventListener('touchstart',e=>{
-      modalEl=document.getElementById(innerSel);
-      if(!modalEl)return;
-      // Only start drag from top of modal (scrollTop near 0) or on handle
-      if(modalEl.scrollTop>5)return;
-      startY=e.touches[0].clientY;
-      currentY=startY;
-      isDragging=true;
-      modalEl.style.transition='none';
-    },{passive:true});
-
-    overlay.addEventListener('touchmove',e=>{
-      if(!isDragging||!modalEl)return;
-      currentY=e.touches[0].clientY;
-      const dy=currentY-startY;
-      if(dy>0){
-        modalEl.style.transform='translateY('+dy+'px)';
-        // Dim overlay
-        const opacity=Math.max(0,1-dy/400);
-        overlay.style.background='rgba(0,0,0,'+(.5*opacity)+')';
-      }
-    },{passive:true});
-
-    overlay.addEventListener('touchend',()=>{
-      if(!isDragging||!modalEl)return;
-      isDragging=false;
-      const dy=currentY-startY;
-      modalEl.style.transition='transform .25s ease';
-      overlay.style.transition='background .25s ease';
-      if(dy>120){
-        // Dismiss
-        modalEl.style.transform='translateY(100%)';
-        overlay.style.background='rgba(0,0,0,0)';
-        setTimeout(()=>{
-          closeModal(modalId);
-          modalEl.style.transform='';
-          modalEl.style.transition='';
-          overlay.style.background='';
-          overlay.style.transition='';
-        },250);
-      } else {
-        modalEl.style.transform='';
-        overlay.style.background='';
-        setTimeout(()=>{
-          modalEl.style.transition='';
-          overlay.style.transition='';
-        },250);
-      }
-    },{passive:true});
-  });
-})();
+// Swipe left/right on detail modal
+(function(){const overlay=document.getElementById('detailModal');let startX=0,currentX=0,startY=0,currentY=0,isSwiping=false;
+overlay.addEventListener('touchstart',e=>{startX=e.touches[0].clientX;currentX=startX;startY=e.touches[0].clientY;currentY=startY;isSwiping=true},{passive:true});
+overlay.addEventListener('touchmove',e=>{if(!isSwiping)return;currentX=e.touches[0].clientX;currentY=e.touches[0].clientY},{passive:true});
+overlay.addEventListener('touchend',()=>{if(!isSwiping)return;isSwiping=false;const dx=currentX-startX;const dy=Math.abs(currentY-startY);if(Math.abs(dx)>60&&dy<100){if(dx<0)nextItem();else prevItem()}},{passive:true})})();
 
 function showToast(m,t='info'){const c=document.getElementById('toastContainer'),d=document.createElement('div');d.className='toast '+t;d.textContent=m;c.appendChild(d);setTimeout(()=>d.remove(),3000)}
 function esc(s){if(!s)return'';const d=document.createElement('div');d.textContent=s;return d.innerHTML}
